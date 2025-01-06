@@ -5,11 +5,11 @@ from aiogram.fsm.context import FSMContext
 
 import app.keyboards as kb
 import app.DataBase.requests as rq
+import app.states as st
 
 main_router = Router()
 
-chat_id = 0
-
 @main_router.message(CommandStart())
-async def cmd_start(message: Message):
-    await message.answer('Я очередной пробирочный бот Славы')
+async def cmd_start(message: Message, state: FSMContext):
+    await message.answer('ПРИВЕТСТВИЕ')
+    await state.set_state(st.mono.main_menu)
