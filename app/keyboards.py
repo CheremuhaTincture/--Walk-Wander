@@ -29,6 +29,14 @@ awaiting_for_text = InlineKeyboardMarkup(
     ]
 )
 
+awaiting_for_nickname = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text='Отменить', callback_data='profile_from_nick')
+        ]
+    ]
+)
+
 profile = InlineKeyboardMarkup(
     inline_keyboard=[
         [

@@ -20,3 +20,11 @@ async def add_user(user_info):
             icons_id = randint(0, 2),
         ))
         await session.commit()
+
+async def change_nick(chat_id, new_name):
+    async with async_session() as session:
+        change = (update(User)
+                  .where(User.chat_id == chat_id)
+                  .values(name = new_name))
+        await session.execute(change)
+        await session.commit()
