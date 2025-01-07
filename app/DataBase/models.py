@@ -19,8 +19,9 @@ class User(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     chat_id = mapped_column(BigInteger)
-    name: Mapped[str] = mapped_column(String(30))
-    phone: Mapped[str] = mapped_column(String(20))
+    name: Mapped[str] = mapped_column(String(40))
+    icons_id: Mapped[int] = mapped_column()
+    
 
 async def async_main():
     async with engine.begin() as conn:

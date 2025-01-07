@@ -3,6 +3,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from dotenv import load_dotenv
+from app.handlers.reg_handler import reg_init
 
 import app.keyboards as kb
 import app.DataBase.requests as rq
@@ -16,15 +17,27 @@ main_router = Router()
 
 @main_router.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext):
-    await message.answer('ПРИВЕТСТВИЕ', reply_markup=kb.main_menu)
+    if await rq.is_registered(message.from_user.id):
+        await message.answer('ПРИВЕТСТВИЕ', reply_markup=kb.main_menu)
+        await state.set_state(st.mono.main_menu)
+    else:
+        await reg_init(message, state, message.from_user.id)
+
+@main_router.callback_query(F.data == 'menu_mono_from_support', st.mono.text_to_support)
+async def menu_mono(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer('ТЕКСТ МЕНЮ', reply_markup=kb.main_menu)
+    await callback.message.delete()
     await state.set_state(st.mono.main_menu)
+
+@main_router.callback_query(F.data == 'menu_mono_from_support')
+async def menu_mono(callback: CallbackQuery, state: FSMContext):
+    await callback.message.delete()
 
 @main_router.callback_query(F.data == 'menu_mono')
 async def menu_mono(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer('ТЕКСТ МЕНЮ', reply_markup=kb.main_menu)
     await callback.message.delete()
     await state.set_state(st.mono.main_menu)
-
 
 
 
@@ -37,6 +50,8 @@ async def mono_support(callback: CallbackQuery, state: FSMContext):
 
 @main_router.message(st.mono.text_to_support)
 async def sending_text(message: Message, state: FSMContext):
+    await state.set_state(st.mono.main_menu)
+    await message.answer('ТЕКСТ ОТПРАВКИ', reply_markup=kb.main_menu)
     await message.bot.send_message(chat_id=int(os.getenv('SUPPORT_GROUP')),
                                    text=f'Сообщение от пользователя {message.from_user.id}:\n\n'+message.text)
 
