@@ -4,6 +4,7 @@ from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from dotenv import load_dotenv
 from app.handlers.reg_handler import reg_init
+from app.handlers.game_manage_handler import game_create_init
 
 import app.keyboards as kb
 import app.DataBase.requests as rq
@@ -19,15 +20,15 @@ main_router = Router()
 async def cmd_start(message: Message, state: FSMContext):
     if await rq.is_registered(message.from_user.id):
         await message.answer('ПРИВЕТСТВИЕ', reply_markup=kb.main_menu)
-        await state.set_state(st.mono.main_menu)
+        await state.set_state(st.Mono.main_menu)
     else:
         await reg_init(message, state, message.from_user.id)
 
-@main_router.callback_query(F.data == 'menu_mono_from_support', st.mono.text_to_support)
+@main_router.callback_query(F.data == 'menu_mono_from_support', st.Mono.text_to_support)
 async def menu_mono(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer('ТЕКСТ МЕНЮ', reply_markup=kb.main_menu)
     await callback.message.delete()
-    await state.set_state(st.mono.main_menu)
+    await state.set_state(st.Mono.main_menu)
 
 @main_router.callback_query(F.data == 'menu_mono_from_support')
 async def menu_mono(callback: CallbackQuery, state: FSMContext):
@@ -37,7 +38,7 @@ async def menu_mono(callback: CallbackQuery, state: FSMContext):
 async def menu_mono(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer('ТЕКСТ МЕНЮ', reply_markup=kb.main_menu)
     await callback.message.delete()
-    await state.set_state(st.mono.main_menu)
+    await state.set_state(st.Mono.main_menu)
 
 
 
@@ -46,11 +47,11 @@ async def menu_mono(callback: CallbackQuery, state: FSMContext):
 async def mono_support(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer('ТЕКСТ ПОДДЕРЖКИ', reply_markup=kb.awaiting_for_text)
     await callback.message.delete()
-    await state.set_state(st.mono.text_to_support)
+    await state.set_state(st.Mono.text_to_support)
 
-@main_router.message(st.mono.text_to_support)
+@main_router.message(st.Mono.text_to_support)
 async def sending_text(message: Message, state: FSMContext):
-    await state.set_state(st.mono.main_menu)
+    await state.set_state(st.Mono.main_menu)
     await message.answer('ТЕКСТ ОТПРАВКИ', reply_markup=kb.main_menu)
     await message.bot.send_message(chat_id=int(os.getenv('SUPPORT_GROUP')),
                                    text=f'Сообщение от пользователя {message.from_user.id}:\n\n'+message.text)
@@ -62,3 +63,10 @@ async def support_answer(message: Message):
         text = message.text.split('_')[1]
         await message.bot.send_message(chat_id=chat_id,
                                     text='Ответ от поддержки!\n\n'+text)
+        
+
+
+
+@main_router.callback_query(F.data == 'mono_new')
+async def new_game(callback: CallbackQuery, state: FSMContext):
+    await game_create_init(callback=callback, state=state)

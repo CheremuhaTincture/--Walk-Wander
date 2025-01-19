@@ -21,6 +21,38 @@ class User(Base):
     chat_id = mapped_column(BigInteger)
     name: Mapped[str] = mapped_column(String(40))
     icons_id: Mapped[int] = mapped_column()
+
+class Game(Base):
+    __tablename__ = 'games'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    key: Mapped[str] = mapped_column(String(3))
+    map_id: Mapped[Optional[int]] = mapped_column()
+    map_size: Mapped[Optional[int]] = mapped_column()
+    status: Mapped[str] = mapped_column(String(10))
+
+class Player(Base):
+    __tablename__ = 'games_players'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    key: Mapped[str] = mapped_column(String(3))
+    chat_id = mapped_column(BigInteger)
+    admin: Mapped[bool] = mapped_column()
+
+class Addon(Base):
+    __tablename__ = 'games_addons'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    key: Mapped[str] = mapped_column(String(3))
+    addon_type: Mapped[str] = mapped_column(String(15))
+    toggled: Mapped[bool] = mapped_column()
+
+class Match(Base):
+    __tablename__ = 'users_matches'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    chat_id = mapped_column(BigInteger)
+    key: Mapped[str] = mapped_column(String(3))
     
 
 async def async_main():

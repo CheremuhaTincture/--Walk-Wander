@@ -53,3 +53,63 @@ profile = InlineKeyboardMarkup(
         ]
     ]
 )
+
+async def maps_keys(_key, scnd_time):  
+    keys = [
+        [
+            InlineKeyboardButton(text='🏰Карта 1🏰', callback_data=f'map_1_{_key}')
+        ]
+    ]
+
+    if not scnd_time:
+        keys.append(
+            [
+                InlineKeyboardButton(text='🏠В меню🏠', callback_data='menu_mono')
+            ]
+        )
+    else:
+        keys.append(
+            [
+                InlineKeyboardButton(text='🔮Назад🔮', callback_data=f'back_to_{_key}')
+            ]
+        )
+    
+    return InlineKeyboardMarkup(row_wigth = 1, inline_keyboard=keys)
+
+'''size_of_map = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text='Маленькая', callback_data='map_size_s')
+        ],
+        [
+            InlineKeyboardButton(text='Стандартная', callback_data='map_size_m')
+        ],
+        [
+            InlineKeyboardButton(text='Большая', callback_data='map_size_l')
+        ],
+        [
+            InlineKeyboardButton(text='Назад', callback_data='map_choose')
+        ],
+        [
+            InlineKeyboardButton(text='🏠В меню🏠', callback_data='menu_mono')
+        ]
+    ]
+)'''
+
+async def game_management_menu_keys(_key):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text='🚩Начать игру🚩', callback_data=f'game_begin_{_key}')
+            ],
+            [
+                InlineKeyboardButton(text='🔱Изменить настройки🔱', callback_data=f'game_reset_{_key}')
+            ],
+            #[
+            #    InlineKeyboardButton(text='_тест списка игроков_', callback_data=f't_pl_{_key}')
+            #],
+            [
+                InlineKeyboardButton(text='🏠Сохранить и выйти🏠', callback_data='menu_mono')
+            ]
+        ]
+    )
