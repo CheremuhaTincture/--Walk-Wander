@@ -5,6 +5,7 @@ class Mono(StatesGroup):
     text_to_support = State()
     profile = State()
     new_nickname = State()
+    change_icon = State()
 
 class MonoStartReg(StatesGroup):
     name = State()

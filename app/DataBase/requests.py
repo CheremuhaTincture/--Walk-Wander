@@ -17,7 +17,8 @@ async def add_user(user_info):
         session.add(User(
             chat_id = user_info["chat_id"],
             name = user_info["name"],
-            icons_id = randint(0, 1),
+            icon_id = randint(0, 1),
+            icons_access = 1
         ))
         await session.commit()
 
@@ -85,3 +86,17 @@ async def player_count(_key):
             count += 1
 
         return count
+
+async def icons_get(_chat_id):
+    async with async_session() as session:
+        user = await session.scalar(select(User).where(User.chat_id == _chat_id))
+
+        return user.icons_access
+    
+async def icon_change(_chat_id, _icon_id):
+    async with async_session() as session:
+        change = (update(User)
+                  .where(User.chat_id == _chat_id)
+                  .values(icon_id = _icon_id))
+        await session.execute(change)
+        await session.commit()

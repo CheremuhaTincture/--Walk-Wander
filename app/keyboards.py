@@ -54,6 +54,20 @@ profile = InlineKeyboardMarkup(
     ]
 )
 
+icons = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text='Иконка 1', callback_data='icon_1')
+        ],
+        [
+            InlineKeyboardButton(text='Иконка 2', callback_data='icon_2')
+        ],
+        [
+            InlineKeyboardButton(text='👑Назад👑', callback_data='mono_profile')
+        ]
+    ]
+)
+
 async def maps_keys(_key, scnd_time):  
     keys = [
         [
