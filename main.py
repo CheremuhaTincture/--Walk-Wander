@@ -6,6 +6,7 @@ from app.handlers.reg_handler import reg_router
 from app.handlers.profile_handler import prof_router
 from app.handlers.game_manage_handler import game_set_router
 from app.handlers.gameplay_manager import gameplay_router
+from app.keyboards.my_games_keyboard import my_g_kb_router
 from app.DataBase.models import async_main
 
 import os, asyncio
@@ -23,6 +24,7 @@ async def main():
     dp.include_router(prof_router)
     dp.include_router(game_set_router)
     dp.include_router(gameplay_router)
+    dp.include_router(my_g_kb_router)
     await dp.start_polling(bot)
 
 if __name__ == '__main__':

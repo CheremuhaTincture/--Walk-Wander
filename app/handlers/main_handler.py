@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from app.handlers.reg_handler import reg_init
 from app.handlers.game_manage_handler import game_create_init
 
-import app.keyboards as kb
+import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq
 import app.states as st
 
@@ -70,3 +70,7 @@ async def support_answer(message: Message):
 @main_router.callback_query(F.data == 'mono_new')
 async def new_game(callback: CallbackQuery, state: FSMContext):
     await game_create_init(callback=callback, state=state)
+
+@main_router.callback_query(F.data == 'null')
+async def null_func(callback: CallbackQuery):
+    await callback.answer()

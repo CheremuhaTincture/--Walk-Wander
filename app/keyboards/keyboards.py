@@ -127,3 +127,18 @@ async def game_management_menu_keys(_key):
             ]
         ]
     )
+
+async def game_management_m_g_keys(_key):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text='🚩Войти в игру🚩', callback_data=f'game_enter-{_key}')
+            ],
+            [
+                InlineKeyboardButton(text='❌Стереть информацию❌', callback_data=f'game_info_delete-{_key}')
+            ],
+            [
+                InlineKeyboardButton(text='🔮Назад🔮', callback_data='my_games')
+            ]
+        ]
+    )

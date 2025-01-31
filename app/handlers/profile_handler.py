@@ -2,8 +2,9 @@ from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from dotenv import load_dotenv
+from app.keyboards.my_games_keyboard import my_games_keyboard
 
-import app.keyboards as kb
+import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq
 import app.states as st
 import static.funcs as fs
@@ -76,3 +77,33 @@ async def save_icon(callback: CallbackQuery, state: FSMContext):
             await callback.message.answer('ИЗМЕНЕНИЯ СОХРАНЕНЫ', reply_markup=kb.profile)
     else:
             await callback.message.answer('НЕТ ДОСТУПА К ИКОНКЕ', reply_markup=kb.profile)
+
+
+
+
+@prof_router.callback_query(F.data == 'my_games')
+async def my_games(callback: CallbackQuery):
+    await callback.message.delete()
+
+    try:
+        await callback.message.answer('ВОТ ВАШИ ИГРЫ',
+                                      reply_markup = await my_games_keyboard(0, callback.from_user.id))
+    except Exception:
+        await callback.message.answer('ОШИБКА ПОЛУЧЕНИЯ ИНФОРМАЦИИ ОБ ИГРАХ', reply_markup=kb.profile) 
+
+@prof_router.callback_query(F.data.startswith('game_'))
+async def get_game(callback: CallbackQuery, state: FSMContext):
+    await callback.message.delete()
+    key = callback.data.split('_')[1]
+
+    try:
+        game_info = await rq.get_game_info(key)
+    except Exception:
+        await callback.message.answer('ОШИБКА ПОЛУЧЕНИЯ ИНФОРМАЦИИ ОБ ИГРЕ', reply_markup=kb.profile) 
+    else:
+        map_name = fs.map_name(game_info['map_id'])
+        map_size = fs.map_size(game_info['map_size'])
+        status = fs.game_status(game_info['status'])
+        await callback.message.answer(f'Карта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                      reply_markup = await kb.game_management_m_g_keys(key))
+

@@ -3,6 +3,7 @@ from app.DataBase.models import User, Game, Player, Match
 from sqlalchemy import select, update
 from random import randint
 
+#Управление пользователем
 async def is_registered(_chat_id):
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.chat_id == _chat_id))
@@ -29,7 +30,18 @@ async def change_nick(_chat_id, new_name):
                   .values(name = new_name))
         await session.execute(change)
         await session.commit()
+    
+async def icon_change(_chat_id, _icon_id):
+    async with async_session() as session:
+        change = (update(User)
+                  .where(User.chat_id == _chat_id)
+                  .values(icon_id = _icon_id))
+        await session.execute(change)
+        await session.commit()
 
+
+
+#Управление игрой
 async def create_game(_chat_id):
     _key = await create_key()
     async with async_session() as session:
@@ -77,6 +89,9 @@ async def set_game_status_started(_key):
         await session.execute(change)
         await session.commit()
 
+
+
+#Сбор информации
 async def player_count(_key):
     async with async_session() as session:
         players = await session.scalars(select(Player).where(Player.key == _key))
@@ -92,11 +107,28 @@ async def icons_get(_chat_id):
         user = await session.scalar(select(User).where(User.chat_id == _chat_id))
 
         return user.icons_access
-    
-async def icon_change(_chat_id, _icon_id):
+
+async def get_my_games(_chat_id):
     async with async_session() as session:
-        change = (update(User)
-                  .where(User.chat_id == _chat_id)
-                  .values(icon_id = _icon_id))
-        await session.execute(change)
-        await session.commit()
+        players = await session.scalars(select(Player).where(Player.chat_id == _chat_id))
+
+        games = []
+        for player in players:
+            games.append(player.key)
+        return games
+
+async def get_game_info(_key):
+    async with async_session() as session:
+        game = await session.scalar(select(Game).where(Game.key == _key))
+
+        num_of_players = await player_count(_key)
+
+        addons = 0
+
+        return {
+            'map_id' : game.map_id,
+            'map_size' : game.map_size,
+            'status' : game.status,
+            'num_of_players' : num_of_players,
+            'addons' : addons
+        }

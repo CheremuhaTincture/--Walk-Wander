@@ -2,7 +2,7 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-import app.keyboards as kb
+import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq
 import app.states as st
 
