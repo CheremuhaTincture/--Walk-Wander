@@ -3,6 +3,8 @@ from aiogram.types import (
     InlineKeyboardMarkup, InlineKeyboardButton
 )
 
+import app.DataBase.requests as rq
+
 main_menu = InlineKeyboardMarkup(
     inline_keyboard=[
         [
@@ -54,19 +56,32 @@ profile = InlineKeyboardMarkup(
     ]
 )
 
-icons = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [
-            InlineKeyboardButton(text='Иконка 1', callback_data='icon_1')
-        ],
-        [
-            InlineKeyboardButton(text='Иконка 2', callback_data='icon_2')
-        ],
+async def icons(__chat_id):
+    icon_id = await rq.chosen_icon(_chat_id=__chat_id)
+
+    keys = []
+
+    for i in range(0, 2):
+        if icon_id == i:
+            keys.append(
+                [
+                    InlineKeyboardButton(text=f'✨Иконка {i+1}✨', callback_data=f'icon_{i+1}')
+                ]
+            )
+        else:
+            keys.append(
+                [
+                    InlineKeyboardButton(text=f'Иконка {i+1}', callback_data=f'icon_{i+1}')
+                ]
+            )
+
+    keys.append(
         [
             InlineKeyboardButton(text='👑Назад👑', callback_data='mono_profile')
         ]
-    ]
-)
+    )
+
+    return InlineKeyboardMarkup(row_wigth = 1, inline_keyboard=keys)
 
 async def maps_keys(_key, scnd_time):  
     keys = [

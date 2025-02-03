@@ -149,3 +149,9 @@ async def is_created(_key):
             return True
         else:
             return False
+        
+async def chosen_icon(_chat_id):
+    async with async_session() as session:
+        user = await session.scalar(select(User).where(User.chat_id == _chat_id))
+
+        return user.icon_id

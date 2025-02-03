@@ -56,7 +56,7 @@ async def access_to_icons_check(callback: CallbackQuery, state: FSMContext):
         await state.set_state(st.Mono.profile)
     else:
         await callback.message.delete()
-        await callback.message.answer('ВЫБЕРИТЕ ИКОНКУ', reply_markup=kb.icons)
+        await callback.message.answer('ВЫБЕРИТЕ ИКОНКУ', reply_markup = await kb.icons(__chat_id = callback.from_user.id))
         await state.update_data(access = fs.decode(icons_access))
         await state.set_state(st.Mono.change_icon)
 
