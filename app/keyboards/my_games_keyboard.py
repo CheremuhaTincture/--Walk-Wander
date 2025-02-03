@@ -24,7 +24,7 @@ async def my_games_keyboard(_page_no, _chat_id):
         for i in range(_page_no*6, min(len(games), (_page_no + 1)*6)):
             game_key = [
                 InlineKeyboardButton(text=f'Игра №{games[i]}',
-                                    callback_data=f'game_{games[i]}')
+                                    callback_data=f'game_number-{games[i]}')
             ]
             games_keys.append(game_key)
         

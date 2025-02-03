@@ -135,7 +135,7 @@ async def game_management_m_g_keys(_key):
                 InlineKeyboardButton(text='🚩Войти в игру🚩', callback_data=f'game_enter-{_key}')
             ],
             [
-                InlineKeyboardButton(text='❌Стереть информацию❌', callback_data=f'game_info_delete-{_key}')
+                InlineKeyboardButton(text='❌Стереть информацию❌', callback_data=f'game_erase-{_key}')
             ],
             [
                 InlineKeyboardButton(text='🔮Назад🔮', callback_data='my_games')

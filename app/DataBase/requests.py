@@ -1,6 +1,6 @@
 from app.DataBase.models import async_session
 from app.DataBase.models import User, Game, Player, Match
-from sqlalchemy import select, update
+from sqlalchemy import select, update, delete
 from random import randint
 
 #Управление пользователем
@@ -36,6 +36,14 @@ async def icon_change(_chat_id, _icon_id):
         change = (update(User)
                   .where(User.chat_id == _chat_id)
                   .values(icon_id = _icon_id))
+        await session.execute(change)
+        await session.commit()
+
+async def erase_player(_chat_id, _key):
+    async with async_session() as session:
+        change = (delete(Player)
+                  .where(Player.chat_id == _chat_id,
+                         Player.key == _key))
         await session.execute(change)
         await session.commit()
 
@@ -132,3 +140,12 @@ async def get_game_info(_key):
             'num_of_players' : num_of_players,
             'addons' : addons
         }
+
+async def is_created(_key):
+    async with async_session() as session:
+        game = await session.scalar(select(Game).where(Game.key == _key))
+
+        if game.status == 'created':
+            return True
+        else:
+            return False

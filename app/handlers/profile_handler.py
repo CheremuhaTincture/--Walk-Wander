@@ -91,10 +91,10 @@ async def my_games(callback: CallbackQuery):
     except Exception:
         await callback.message.answer('ОШИБКА ПОЛУЧЕНИЯ ИНФОРМАЦИИ ОБ ИГРАХ', reply_markup=kb.profile) 
 
-@prof_router.callback_query(F.data.startswith('game_'))
+@prof_router.callback_query(F.data.startswith('game_number-'))
 async def get_game(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    key = callback.data.split('_')[1]
+    key = callback.data.split('-')[1]
 
     try:
         game_info = await rq.get_game_info(key)
@@ -107,3 +107,36 @@ async def get_game(callback: CallbackQuery, state: FSMContext):
         await callback.message.answer(f'Карта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
                                       reply_markup = await kb.game_management_m_g_keys(key))
 
+@prof_router.callback_query(F.data.startswith('game_enter-'))
+async def return_to_game(callback: CallbackQuery, state: FSMContext):
+    key = callback.data.split('-')[1]
+
+    try:
+        if await rq.is_created(key):
+            await state.set_state(st.MonoGameManage.menu)
+            await callback.message.delete()
+            await callback.message.answer(f'ВОЗВРАТ В ИГРУ, КЛЮЧ ИГРЫ: {key}',
+                                        reply_markup = await kb.game_management_menu_keys(_key=key))
+        else:
+            await callback.message.delete()
+            await callback.message.answer('К ЭТОЙ ИГРЕ ПРИСОЕДИНИТЬСЯ УЖЕ НЕЛЬЗЯ',
+                                          reply_markup = await my_games_keyboard(0, callback.from_user.id))
+    except Exception:
+        await callback.message.delete()
+        await callback.message.answer('ОШИБКА ПОЛУЧЕНИЯ ДАННЫХ', reply_markup=kb.main_menu)
+        await state.set_state(st.Mono.main_menu)
+
+@prof_router.callback_query(F.data.startswith('game_erase-'))
+async def return_to_game(callback: CallbackQuery, state: FSMContext):
+    key = callback.data.split('-')[1]
+
+    try:
+        await rq.erase_player(_chat_id=callback.from_user.id, _key=key)
+    except Exception:
+        await callback.message.delete()
+        await callback.message.answer('ОШИБКА УДАЛЕНИЯ ДАННЫХ', reply_markup=kb.main_menu)
+        await state.set_state(st.Mono.main_menu)
+    else:
+        await callback.message.delete()
+        await callback.message.answer(f'ДАННЫЕ УДАЛЕНЫ',
+                                      reply_markup = await my_games_keyboard(0, callback.from_user.id))
