@@ -40,6 +40,7 @@ class Player(Base):
     chat_id = mapped_column(BigInteger)
     admin: Mapped[bool] = mapped_column()
     in_lobby: Mapped[bool] = mapped_column()
+    main_message_id: Mapped[Optional[str]] = mapped_column(String(20))
 
 class Addon(Base):
     __tablename__ = 'games_addons'

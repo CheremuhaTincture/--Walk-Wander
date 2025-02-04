@@ -97,8 +97,9 @@ async def check_key(message: Message, state: FSMContext):
                 map_size = fs.map_size(game_info['map_size'])
                 status = fs.game_status(game_info['status'])
                 if await rq.player_is_admin(message.from_user.id, key):
-                    await message.answer(f'ВЫ ПОДКЛЮЧИЛИСЬ К ВАШЕЙ ИГРЕ №{key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
-                                        reply_markup = await kb.game_management_menu_keys(_key=key))
+                    msg = await message.answer(f'ВЫ ПОДКЛЮЧИЛИСЬ К ВАШЕЙ ИГРЕ №{key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                               reply_markup = await kb.game_management_menu_keys(_key=key))
+                    await rq.set_main_message(message.from_user.id, key, msg.message_id)
                 else:
                     await message.answer(f'ВЫ ПОДКЛЮЧИЛИСЬ К ИГРЕ №{key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
                                          reply_markup=kb.back_to_menu_from_lobby)
@@ -130,8 +131,9 @@ async def enter_random(callback: CallbackQuery):
                 map_size = fs.map_size(game_info['map_size'])
                 status = fs.game_status(game_info['status'])
                 if await rq.player_is_admin(callback.from_user.id, key):
-                    await message.answer(f'ВЫ ПОДКЛЮЧИЛИСЬ К ВАШЕЙ ИГРЕ №{key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
-                                        reply_markup = await kb.game_management_menu_keys(_key=key))
+                    msg = await message.answer(f'ВЫ ПОДКЛЮЧИЛИСЬ К ВАШЕЙ ИГРЕ №{key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                               reply_markup = await kb.game_management_menu_keys(_key=key))
+                    await rq.set_main_message(callback.from_user.id, key, msg.message_id)
                 else:
                     await message.answer(f'ВЫ ПОДКЛЮЧИЛИСЬ К ИГРЕ №{key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
                                         reply_markup=kb.back_to_menu_from_lobby)

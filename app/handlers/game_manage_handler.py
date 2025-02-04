@@ -41,8 +41,9 @@ async def map_save(callback: CallbackQuery, state: FSMContext):
         map_name = fs.map_name(game_info['map_id'])
         map_size = fs.map_size(game_info['map_size'])
         status = fs.game_status(game_info['status'])
-        await callback.message.answer(f'ИГРА СОЗДАНА, КЛЮЧ ИГРЫ: {key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
-                                      reply_markup = await kb.game_management_menu_keys(_key=key))
+        msg = await callback.message.answer(f'ИГРА СОЗДАНА, КЛЮЧ ИГРЫ: {key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                            reply_markup = await kb.game_management_menu_keys(_key=key))
+        await rq.set_main_message(callback.from_user.id, key, msg.message_id)
 
 
 

@@ -80,6 +80,15 @@ async def activate_player(_chat_id, _key):
         await session.execute(change)
         await session.commit()
 
+async def set_main_message(_chat_id, _key, message_id):
+    async with async_session() as session:
+        change = (update(Player)
+                  .where(Player.chat_id == _chat_id,
+                         Player.key == _key)
+                  .values(set_main_message = str(message_id)))
+        await session.execute(change)
+        await session.commit()
+
 
 
 
