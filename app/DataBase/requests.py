@@ -62,6 +62,24 @@ async def join_game(_chat_id, _key):
             ))
             await session.commit()
 
+async def deactivate_player(_chat_id):
+    async with async_session() as session:
+        change = (update(Player)
+                  .where(Player.chat_id == _chat_id,
+                         Player.in_lobby == True)
+                  .values(in_lobby = False))
+        await session.execute(change)
+        await session.commit()
+
+async def activate_player(_chat_id, _key):
+    async with async_session() as session:
+        change = (update(Player)
+                  .where(Player.chat_id == _chat_id,
+                         Player.key == _key)
+                  .values(in_lobby = True))
+        await session.execute(change)
+        await session.commit()
+
 
 
 

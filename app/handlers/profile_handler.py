@@ -35,7 +35,7 @@ async def open_profile(callback: CallbackQuery, state: FSMContext):
 async def change_nick_begin(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await callback.message.answer('ВВЕДИТЕ НОВЫЙ НИК', reply_markup=kb.awaiting_for_nickname)
-    await state.set_state(st.Mono.new_nickname)
+    await state.set_state(st .Mono.new_nickname)
 
 @prof_router.message(st.Mono.new_nickname)
 async def save_new_name(message: Message, state: FSMContext):
@@ -104,23 +104,28 @@ async def get_game(callback: CallbackQuery, state: FSMContext):
         map_name = fs.map_name(game_info['map_id'])
         map_size = fs.map_size(game_info['map_size'])
         status = fs.game_status(game_info['status'])
-        if await rq.player_is_admin(callback.from_user.id, key):
-            await callback.message.answer(f'Карта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
-                                          reply_markup = await kb.game_management_m_g_keys(key))
-        else:
-            await callback.message.answer(f'Карта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
-                                          reply_markup=kb.back_to_menu)
+        await callback.message.answer(f'Карта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                      reply_markup = await kb.game_management_m_g_keys(key))
 
 @prof_router.callback_query(F.data.startswith('game_enter-'))
 async def return_to_game(callback: CallbackQuery, state: FSMContext):
     key = callback.data.split('-')[1]
 
     try:
+        game_info = await rq.get_game_info(key)
+        map_name = fs.map_name(game_info['map_id'])
+        map_size = fs.map_size(game_info['map_size'])
+        status = fs.game_status(game_info['status'])
         if await rq.game_is_created(key):
             await state.set_state(st.MonoGameManage.menu)
             await callback.message.delete()
-            await callback.message.answer(f'ВОЗВРАТ В ИГРУ, КЛЮЧ ИГРЫ: {key}',
-                                        reply_markup = await kb.game_management_menu_keys(_key=key))
+            if await rq.player_is_admin(callback.from_user.id, key):
+                await callback.message.answer(f'ВОЗВРАТ В ИГРУ, КЛЮЧ ИГРЫ: {key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                              reply_markup = await kb.game_management_menu_keys(_key=key))
+            else:
+                await callback.message.answer(f'ВОЗВРАТ В ИГРУ, КЛЮЧ ИГРЫ: {key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                              reply_markup=kb.back_to_menu_from_lobby)
+                await rq.activate_player(callback.from_user.id, key)
         else:
             await callback.message.delete()
             await callback.message.answer('К ЭТОЙ ИГРЕ ПРИСОЕДИНИТЬСЯ УЖЕ НЕЛЬЗЯ',

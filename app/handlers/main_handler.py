@@ -41,6 +41,13 @@ async def menu_mono(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await state.set_state(st.Mono.main_menu)
 
+@main_router.callback_query(F.data == 'menu_mono_from_lobby')
+async def menu_mono(callback: CallbackQuery, state: FSMContext):
+    await rq.deactivate_player(callback.from_user.id)
+    await callback.message.answer('ТЕКСТ МЕНЮ', reply_markup=kb.main_menu)
+    await callback.message.delete()
+    await state.set_state(st.Mono.main_menu)
+
 
 
 
@@ -90,11 +97,11 @@ async def check_key(message: Message, state: FSMContext):
                 map_size = fs.map_size(game_info['map_size'])
                 status = fs.game_status(game_info['status'])
                 if await rq.player_is_admin(message.from_user.id, key):
-                    await message.answer(f'Карта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
-                                        reply_markup = await kb.game_management_m_g_keys(key))
+                    await message.answer(f'ВЫ ПОДКЛЮЧИЛИСЬ К ВАШЕЙ ИГРЕ №{key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                        reply_markup = await kb.game_management_menu_keys(_key=key))
                 else:
-                    await message.answer(f'Карта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
-                                         reply_markup=kb.back_to_menu)
+                    await message.answer(f'ВЫ ПОДКЛЮЧИЛИСЬ К ИГРЕ №{key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                         reply_markup=kb.back_to_menu_from_lobby)
             else:
                 await message.answer('К ЭТОЙ ИГРЕ ПРИСОЕДИНИТЬСЯ УЖЕ НЕЛЬЗЯ',
                                      reply_markup=kb.main_menu)

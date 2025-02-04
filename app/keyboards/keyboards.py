@@ -31,6 +31,14 @@ back_to_menu = InlineKeyboardMarkup(
     ]
 )
 
+back_to_menu_from_lobby = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text='В главное меню', callback_data='menu_mono_from_lobby')
+        ]
+    ]
+)
+
 awaiting_for_text = InlineKeyboardMarkup(
     inline_keyboard=[
         [
