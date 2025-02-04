@@ -113,7 +113,36 @@ async def check_key(message: Message, state: FSMContext):
         await state.clear()
     else:
         await message.answer('ВВЕДИТЕ КОРРЕКТНЫЙ КОД')
+
+@main_router.callback_query(F.data == 'mono_random')
+async def enter_random(callback: CallbackQuery):
+        message = callback.message
+
+        await message.delete()
+
+        key = await rq.find_game()
+
+        if key != 0:
+            try:
+                game_info = await rq.get_game_info(key)
+                await rq.join_game(callback.from_user.id, key)
+                map_name = fs.map_name(game_info['map_id'])
+                map_size = fs.map_size(game_info['map_size'])
+                status = fs.game_status(game_info['status'])
+                if await rq.player_is_admin(callback.from_user.id, key):
+                    await message.answer(f'ВЫ ПОДКЛЮЧИЛИСЬ К ВАШЕЙ ИГРЕ №{key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                        reply_markup = await kb.game_management_menu_keys(_key=key))
+                else:
+                    await message.answer(f'ВЫ ПОДКЛЮЧИЛИСЬ К ИГРЕ №{key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                        reply_markup=kb.back_to_menu_from_lobby)
+
+            except Exception:
+                await message.answer('ОШИБКА ПРИ ПРИСОЕДИНЕНИИ',
+                                    reply_markup=kb.main_menu)
         
+        else:
+            await message.answer('СВОБОДНЫХ ИГР НЕТ',
+                                    reply_markup=kb.main_menu)
 
 
 @main_router.callback_query(F.data == 'null')

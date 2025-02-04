@@ -215,3 +215,18 @@ async def player_is_admin(_chat_id, _key):
                                             Player.key == _key))
 
         return player.admin
+
+async def find_game():
+    async with async_session() as session:
+        free_games_keys = []
+
+        games = await session.scalars(select(Game).
+                                      where(Game.status == 'created'))
+        
+        for game in games:
+            free_games_keys.append(game.key)
+        
+        if len(free_games_keys) != 0:
+            return free_games_keys[randint(0, len(free_games_keys)-1)]
+        else:
+            return 0
