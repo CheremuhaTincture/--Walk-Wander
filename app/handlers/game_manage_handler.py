@@ -5,6 +5,7 @@ from aiogram.fsm.context import FSMContext
 import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq
 import app.states as st
+import static.funcs as fs
 
 game_set_router = Router()
 
@@ -36,7 +37,11 @@ async def map_save(callback: CallbackQuery, state: FSMContext):
     else:
         await state.set_state(st.MonoGameManage.menu)
         await callback.message.delete()
-        await callback.message.answer(f'ИГРА СОЗДАНА, КЛЮЧ ИГРЫ: {key}',
+        game_info = await rq.get_game_info(key)
+        map_name = fs.map_name(game_info['map_id'])
+        map_size = fs.map_size(game_info['map_size'])
+        status = fs.game_status(game_info['status'])
+        await callback.message.answer(f'ИГРА СОЗДАНА, КЛЮЧ ИГРЫ: {key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
                                       reply_markup = await kb.game_management_menu_keys(_key=key))
 
 
@@ -96,7 +101,7 @@ async def start_game(callback: CallbackQuery, state: FSMContext):
     else:
         if (player_count > 1) and (everybody_are_ready):
             try:
-                rq.set_game_status_started(key)
+                await rq.set_game_status_started(key)
 
             except Exception:
                 await callback.message.delete()

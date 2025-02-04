@@ -124,8 +124,8 @@ async def enter_random(callback: CallbackQuery):
 
         if key != 0:
             try:
-                game_info = await rq.get_game_info(key)
                 await rq.join_game(callback.from_user.id, key)
+                game_info = await rq.get_game_info(key)
                 map_name = fs.map_name(game_info['map_id'])
                 map_size = fs.map_size(game_info['map_size'])
                 status = fs.game_status(game_info['status'])
