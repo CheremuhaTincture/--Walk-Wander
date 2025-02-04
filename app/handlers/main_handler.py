@@ -9,6 +9,7 @@ from app.handlers.game_manage_handler import game_create_init
 import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq
 import app.states as st
+import static.funcs as fs
 
 import os
 
@@ -70,6 +71,43 @@ async def support_answer(message: Message):
 @main_router.callback_query(F.data == 'mono_new')
 async def new_game(callback: CallbackQuery, state: FSMContext):
     await game_create_init(callback=callback, state=state)
+
+@main_router.callback_query(F.data == 'mono_code')
+async def enter_by_code(callback: CallbackQuery, state: FSMContext):
+    await callback.message.delete()
+    await callback.message.answer('ВВЕДИТЕ КОД ИГРЫ', reply_markup=kb.back_to_menu)
+    await state.set_state(st.Mono.game_key)
+
+@main_router.message(st.Mono.game_key)
+async def check_key(message: Message, state: FSMContext):
+    if (len(message.text) == 3) and (message.text.isdigit()):
+        key = message.text
+        try:
+            game_info = await rq.get_game_info(key)
+            if await rq.game_is_created(key):
+                await rq.join_game(message.from_user.id, key)
+                map_name = fs.map_name(game_info['map_id'])
+                map_size = fs.map_size(game_info['map_size'])
+                status = fs.game_status(game_info['status'])
+                if await rq.player_is_admin(message.from_user.id, key):
+                    await message.answer(f'Карта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                        reply_markup = await kb.game_management_m_g_keys(key))
+                else:
+                    await message.answer(f'Карта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                         reply_markup=kb.back_to_menu)
+            else:
+                await message.answer('К ЭТОЙ ИГРЕ ПРИСОЕДИНИТЬСЯ УЖЕ НЕЛЬЗЯ',
+                                     reply_markup=kb.main_menu)
+
+        except Exception:
+            await message.answer('ОШИБКА ПРИ ПРИСОЕДИНЕНИИ',
+                                 reply_markup=kb.main_menu)
+            
+        await state.clear()
+    else:
+        await message.answer('ВВЕДИТЕ КОРРЕКТНЫЙ КОД')
+        
+
 
 @main_router.callback_query(F.data == 'null')
 async def null_func(callback: CallbackQuery):

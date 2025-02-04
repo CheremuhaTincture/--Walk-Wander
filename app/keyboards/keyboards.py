@@ -23,6 +23,14 @@ main_menu = InlineKeyboardMarkup(
     ]
 )
 
+back_to_menu = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text='В главное меню', callback_data='menu_mono')
+        ]
+    ]
+)
+
 awaiting_for_text = InlineKeyboardMarkup(
     inline_keyboard=[
         [

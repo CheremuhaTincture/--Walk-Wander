@@ -6,6 +6,7 @@ class Mono(StatesGroup):
     profile = State()
     new_nickname = State()
     change_icon = State()
+    game_key = State()
 
 class MonoStartReg(StatesGroup):
     name = State()

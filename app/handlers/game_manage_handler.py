@@ -76,33 +76,36 @@ async def map_save(callback: CallbackQuery, state: FSMContext):
         await callback.message.answer(f'ПАРАМЕТРЫ ИЗМЕНЕНЫ, КЛЮЧ ИГРЫ: {key}',
                                       reply_markup = await kb.game_management_menu_keys(_key=key))
 
+
+
+
 @game_set_router.callback_query(st.MonoGameManage.menu, F.data.startswith('game_begin_'))
 async def start_game(callback: CallbackQuery, state: FSMContext):
     key = callback.data.split('_')[2]
 
+    #считаем игроков и готовность всех игроков:
     try:
         player_count = await rq.player_count(key)
+        everybody_are_ready = await rq.everybody_are_ready(key)
+
     except Exception:
         await callback.message.delete()
         await callback.message.answer('ОШИБКА ПОДСЧЕТА ИГРОКОВ',
                                       reply_markup = await kb.game_management_menu_keys(_key=key))
+        
     else:
-        if player_count > 1:
+        if (player_count > 1) and (everybody_are_ready):
             try:
                 rq.set_game_status_started(key)
+
             except Exception:
                 await callback.message.delete()
                 await callback.message.answer('ОШИБКА НАЗНАЧЕНИЯ СТАТУСА',
                                               reply_markup = await kb.game_management_menu_keys(_key=key))
+                
             #else:
 
-        else:
+        if not everybody_are_ready:
+            await callback.answer('Кто-то из игроков не зашел в лобби', show_alert=True)
+        if player_count == 0:
             await callback.answer('Невозможно создать игру без игроков', show_alert=True)
-
-'''@game_set_router.callback_query(st.MonoGameManage.menu, F.data.startswith('t_pl_'))
-async def start_game(callback: CallbackQuery, state: FSMContext):
-    key = callback.data.split('_')[2]
-
-    print(await rq.player_count(key))
-    
-    #else:'''

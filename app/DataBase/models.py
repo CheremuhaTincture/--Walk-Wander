@@ -39,7 +39,7 @@ class Player(Base):
     key: Mapped[str] = mapped_column(String(3))
     chat_id = mapped_column(BigInteger)
     admin: Mapped[bool] = mapped_column()
-    #active: Mapped[bool] = mapped_column()
+    in_lobby: Mapped[bool] = mapped_column()
 
 class Addon(Base):
     __tablename__ = 'games_addons'

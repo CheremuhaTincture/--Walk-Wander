@@ -104,15 +104,19 @@ async def get_game(callback: CallbackQuery, state: FSMContext):
         map_name = fs.map_name(game_info['map_id'])
         map_size = fs.map_size(game_info['map_size'])
         status = fs.game_status(game_info['status'])
-        await callback.message.answer(f'Карта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
-                                      reply_markup = await kb.game_management_m_g_keys(key))
+        if await rq.player_is_admin(callback.from_user.id, key):
+            await callback.message.answer(f'Карта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                          reply_markup = await kb.game_management_m_g_keys(key))
+        else:
+            await callback.message.answer(f'Карта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
+                                          reply_markup=kb.back_to_menu)
 
 @prof_router.callback_query(F.data.startswith('game_enter-'))
 async def return_to_game(callback: CallbackQuery, state: FSMContext):
     key = callback.data.split('-')[1]
 
     try:
-        if await rq.is_created(key):
+        if await rq.game_is_created(key):
             await state.set_state(st.MonoGameManage.menu)
             await callback.message.delete()
             await callback.message.answer(f'ВОЗВРАТ В ИГРУ, КЛЮЧ ИГРЫ: {key}',

@@ -47,6 +47,22 @@ async def erase_player(_chat_id, _key):
         await session.execute(change)
         await session.commit()
 
+async def join_game(_chat_id, _key):
+    async with async_session() as session:
+        player = await session.scalar(select(Player)
+                                      .where(Player.chat_id == _chat_id,
+                                             Player.key == _key))
+
+        if not player:
+            session.add(Player(
+                chat_id = _chat_id,
+                key = _key,
+                admin = False,
+                in_lobby = True
+            ))
+            await session.commit()
+
+
 
 
 #Управление игрой
@@ -61,7 +77,8 @@ async def create_game(_chat_id):
         session.add(Player(
             key = _key,
             chat_id = _chat_id,
-            admin = True
+            admin = True,
+            in_lobby = True
         ))
         session.add(Match(
             chat_id = _chat_id,
@@ -110,6 +127,23 @@ async def player_count(_key):
 
         return count
 
+async def everybody_are_ready(_key):
+    async with async_session() as session:
+        all_players = await player_count(_key)
+
+        players = await session.scalars(select(Player)
+                                        .where(Player.key == _key,
+                                               Player.in_lobby == True))
+
+        players_in_lobby = 0
+        for player in players:
+            players_in_lobby += 1
+
+        if players_in_lobby == all_players:
+            return True
+        else:
+            return False
+
 async def icons_get(_chat_id):
     async with async_session() as session:
         user = await session.scalar(select(User).where(User.chat_id == _chat_id))
@@ -141,7 +175,7 @@ async def get_game_info(_key):
             'addons' : addons
         }
 
-async def is_created(_key):
+async def game_is_created(_key):
     async with async_session() as session:
         game = await session.scalar(select(Game).where(Game.key == _key))
 
@@ -155,3 +189,11 @@ async def chosen_icon(_chat_id):
         user = await session.scalar(select(User).where(User.chat_id == _chat_id))
 
         return user.icon_id
+
+async def player_is_admin(_chat_id, _key):
+    async with async_session() as session:
+        player = await session.scalar(select(Player).
+                                      where(Player.chat_id == _chat_id,
+                                            Player.key == _key))
+
+        return player.admin
