@@ -91,6 +91,18 @@ async def set_main_message(_chat_id, _key, message_id):
         await session.execute(change)
         await session.commit()
 
+async def get_main_message_ids(_key):
+    async with async_session() as session:
+        players = await session.scalars(select(Player)
+                                        .where(Player.key == _key))
+        
+        message_ids = []
+
+        for player in players:
+            message_ids.append(player.main_message_id+'_'+str(player.chat_id))
+        
+        return message_ids
+
 
 
 

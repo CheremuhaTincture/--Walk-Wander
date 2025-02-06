@@ -5,6 +5,8 @@ import os
 
 import static.funcs as fs
 import app.DataBase.requests as rq
+import app.keyboards.keyboards as kb
+import aiogram.exceptions as ae
 
 def game_lobby(_key, _game_info, new_player_name, player_exit_name, player_erased_name, everybody_are_ready, prev_text):
     map_name = fs.map_name(_game_info['map_id'])
@@ -44,3 +46,21 @@ async def get_sample_message_text(__key, message: Message):
                                       message_id=_message_id)
     
     return msg.text
+
+async def change_text(__key, _text, message: Message):
+    message_n_chat_ids = await rq.get_main_message_ids(__key)
+
+    for id in message_n_chat_ids:
+        try:
+            if await rq.player_is_admin(id.split('_')[1], __key):
+                await message.bot.edit_message_text(message_id=id.split('_')[0],
+                                                    chat_id=id.split('_')[1],
+                                                    text=_text,
+                                                    reply_markup = await kb.game_management_menu_keys(_key=__key))
+            else:
+                await message.bot.edit_message_text(message_id=id.split('_')[0],
+                                                    chat_id=id.split('_')[1],
+                                                    text=_text,
+                                                    reply_markup=kb.back_to_menu_from_lobby)
+        except ae.TelegramBadRequest:
+            continue
