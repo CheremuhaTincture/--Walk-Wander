@@ -19,15 +19,15 @@ def game_lobby(_key, _game_info, new_player_name, player_exit_name, player_erase
         text += f'Размер карты: {map_size}\nСтатус игры: {status}\n----------------------\n'
         text += f'----------------------\nТекущее число игроков: {num_of_players}\nОжидание игроков...🕝'
     else:
-        text0 = prev_text.split('----------------------')[0] + '----------------------\n'
+        text0 = prev_text.split('----------------------')[0] + '----------------------'
         text1 = prev_text.split('----------------------')[1] + '----------------------'
         text_changed1 = prev_text.split('----------------------')[2]
         if new_player_name != None:
             text_changed1 += f'Игрок {new_player_name} присоединился(лась)!\n'
-        if player_exit_name != None:
+        elif player_exit_name != None:
             text_changed1 += f'Игрок {player_exit_name} покинул(ла) лобби!\n'
-        if player_exit_name != None:
-            text_changed1 += f'Игрок {player_erased_name} покинул(ла) игру!\n'
+        elif player_erased_name != None:
+            text_changed1 += f'{player_erased_name} покинул(ла) игру!\n'
         text_changed1 += '----------------------\n'
         if everybody_are_ready and (num_of_players != 1):
             text_changed2 = f'Текущее число игроков: {num_of_players}\nВсе готовы, можем начинать!⚔️'
@@ -61,6 +61,6 @@ async def change_text(__key, _text, message: Message):
                 await message.bot.edit_message_text(message_id=id.split('_')[0],
                                                     chat_id=id.split('_')[1],
                                                     text=_text,
-                                                    reply_markup=kb.back_to_menu_from_lobby)
+                                                    reply_markup = await kb.back_to_menu_from_lobby(__key))
         except ae.TelegramBadRequest:
             continue

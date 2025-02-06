@@ -8,6 +8,7 @@ import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq
 import app.states as st
 import static.funcs as fs
+import static.texts as tx
 
 import os
 
@@ -113,24 +114,51 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
 
     try:
         game_info = await rq.get_game_info(key)
-        map_name = fs.map_name(game_info['map_id'])
-        map_size = fs.map_size(game_info['map_size'])
-        status = fs.game_status(game_info['status'])
         if await rq.game_is_created(key):
             await state.set_state(st.MonoGameManage.menu)
             await callback.message.delete()
+                
+            old_text = await tx.get_sample_message_text(key, callback.message)
+            await rq.join_game(callback.from_user.id, key)
 
             #Присоединение к игре админа
             if await rq.player_is_admin(callback.from_user.id, key):
-                msg = await callback.message.answer(f'ВОЗВРАТ В ИГРУ, КЛЮЧ ИГРЫ: {key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
-                                                    reply_markup = await kb.game_management_menu_keys(_key=key))
+
+                sample_message_text = tx.game_lobby(
+                    key, game_info,
+                    await rq.get_player_name(callback.from_user.id),
+                    None, None, await rq.everybody_are_ready(key),
+                    old_text
+                )
+
+                msg = await callback.message.answer(
+                    text=sample_message_text,
+                    reply_markup = await kb.game_management_menu_keys(_key=key)
+                )
                 await rq.set_main_message(callback.from_user.id, key, msg.message_id)
 
             #Присоединение к игре не админа
             else:
-                await callback.message.answer(f'ВОЗВРАТ В ИГРУ, КЛЮЧ ИГРЫ: {key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
-                                              reply_markup=kb.back_to_menu_from_lobby)
-                await rq.activate_player(callback.from_user.id, key)
+
+                sample_message_text = tx.game_lobby(
+                    key, game_info,
+                    await rq.get_player_name(callback.from_user.id),
+                    None, None, await rq.everybody_are_ready(key),
+                    old_text
+                )
+
+                msg = await callback.message.answer(
+                    text=sample_message_text,
+                    reply_markup = await kb.back_to_menu_from_lobby(key)
+                )
+                await rq.set_main_message(callback.from_user.id, key, msg.message_id)
+
+                await tx.change_text(key, sample_message_text, callback.message)
+
+                sample_message = await callback.bot.send_message(text=sample_message_text,
+                                                        chat_id=os.getenv('SPAM_GROUP'))
+                sample_message_id = sample_message.message_id
+                await rq.set_sample_message_id(key, sample_message_id)
         else:
             await callback.message.delete()
             await callback.message.answer('К ЭТОЙ ИГРЕ ПРИСОЕДИНИТЬСЯ УЖЕ НЕЛЬЗЯ',
@@ -145,7 +173,48 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
     key = callback.data.split('-')[1]
 
     try:
+        old_text = await tx.get_sample_message_text(key, callback.message)
+        is_admin = await rq.player_is_admin(callback.from_user.id, key)
         await rq.erase_player(_chat_id=callback.from_user.id, _key=key)
+        game_info = await rq.get_game_info(key)
+        #Отключение от игры админа
+        if is_admin:
+
+            exited_player = 'Организатор ' + await rq.get_player_name(callback.from_user.id)
+
+            sample_message_text = tx.game_lobby(
+                key, 
+                game_info,
+                None,
+                None, 
+                exited_player, 
+                await rq.everybody_are_ready(key),
+                old_text
+            )
+
+        #Отсоединение от игры не админа
+        else:
+
+            exited_player = 'Игрок ' + await rq.get_player_name(callback.from_user.id)
+
+            sample_message_text = tx.game_lobby(
+                key, 
+                game_info,
+                None,
+                None, 
+                exited_player, 
+                await rq.everybody_are_ready(key),
+                old_text
+            )
+
+        await tx.change_text(key, sample_message_text, callback.message)
+
+        sample_message = await callback.bot.send_message(text=sample_message_text,
+                                                         chat_id=os.getenv('SPAM_GROUP'))
+        sample_message_id = sample_message.message_id
+        await rq.set_sample_message_id(key, sample_message_id)
+
+
     except Exception:
         await callback.message.delete()
         await callback.message.answer('ОШИБКА УДАЛЕНИЯ ДАННЫХ', reply_markup=kb.main_menu)

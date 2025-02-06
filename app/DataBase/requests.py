@@ -63,6 +63,13 @@ async def join_game(_chat_id, _key):
                 in_lobby = True
             ))
             await session.commit()
+        else:
+            change = (update(Player)
+                      .where(Player.chat_id == _chat_id,
+                             Player.key == _key)
+                      .values(in_lobby = True))
+            await session.execute(change)
+            await session.commit()
 
 async def deactivate_player(_chat_id):
     async with async_session() as session:
@@ -99,7 +106,8 @@ async def get_main_message_ids(_key):
         message_ids = []
 
         for player in players:
-            message_ids.append(player.main_message_id+'_'+str(player.chat_id))
+            if player.main_message_id != None:
+                message_ids.append(player.main_message_id+'_'+str(player.chat_id))
         
         return message_ids
 
@@ -162,6 +170,8 @@ async def set_sample_message_id(_key, id):
                   .values(sample_message_id = str(id)))
         await session.execute(change)
         await session.commit()
+
+
 
 
 

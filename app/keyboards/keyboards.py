@@ -31,14 +31,6 @@ back_to_menu = InlineKeyboardMarkup(
     ]
 )
 
-back_to_menu_from_lobby = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [
-            InlineKeyboardButton(text='В главное меню', callback_data='menu_mono_from_lobby')
-        ]
-    ]
-)
-
 awaiting_for_text = InlineKeyboardMarkup(
     inline_keyboard=[
         [
@@ -170,6 +162,15 @@ async def game_management_m_g_keys(_key):
             ],
             [
                 InlineKeyboardButton(text='🔮Назад🔮', callback_data='my_games')
+            ]
+        ]
+    )
+
+async def back_to_menu_from_lobby(key):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text='В главное меню', callback_data=f'menu_mono_from_lobby-{key}')
             ]
         ]
     )

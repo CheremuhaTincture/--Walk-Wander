@@ -42,12 +42,34 @@ async def menu_mono(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await state.set_state(st.Mono.main_menu)
 
-@main_router.callback_query(F.data == 'menu_mono_from_lobby')
+@main_router.callback_query(F.data.startswith('menu_mono_from_lobby-'))
 async def menu_mono(callback: CallbackQuery, state: FSMContext):
     await rq.deactivate_player(callback.from_user.id)
     await callback.message.answer('ТЕКСТ МЕНЮ', reply_markup=kb.main_menu)
     await callback.message.delete()
     await state.set_state(st.Mono.main_menu)
+
+    key = callback.data.split('-')[1]
+    game_info = await rq.get_game_info(key)
+    old_text = await tx.get_sample_message_text(key, callback.message)
+        
+    sample_message_text = tx.game_lobby(
+        _key = key, 
+        _game_info = game_info,
+        new_player_name = None, 
+        player_exit_name = await rq.get_player_name(callback.from_user.id),
+        player_erased_name = None, 
+        everybody_are_ready = await rq.everybody_are_ready(key),
+        prev_text = old_text
+    )
+
+    await tx.change_text(key, sample_message_text, callback.message)
+
+    sample_message = await callback.bot.send_message(text=sample_message_text,
+                                            chat_id=os.getenv('SPAM_GROUP'))
+    sample_message_id = sample_message.message_id
+    await rq.set_sample_message_id(key, sample_message_id)
+    
 
 
 
@@ -125,7 +147,7 @@ async def check_key(message: Message, state: FSMContext):
 
                     msg = await message.answer(
                         text=sample_message_text,
-                        reply_markup=kb.back_to_menu_from_lobby
+                        reply_markup = await kb.back_to_menu_from_lobby(key)
                     )
                     await rq.set_main_message(message.from_user.id, key, msg.message_id)
 
@@ -191,7 +213,7 @@ async def enter_random(callback: CallbackQuery):
 
                     msg = await message.answer(
                         text=sample_message_text,
-                        reply_markup=kb.back_to_menu_from_lobby
+                        reply_markup = await kb.back_to_menu_from_lobby(key)
                     )
                     await rq.set_main_message(callback.from_user.id, key, msg.message_id)
 
