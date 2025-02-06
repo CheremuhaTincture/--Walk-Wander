@@ -119,10 +119,14 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
         if await rq.game_is_created(key):
             await state.set_state(st.MonoGameManage.menu)
             await callback.message.delete()
+
+            #Присоединение к игре админа
             if await rq.player_is_admin(callback.from_user.id, key):
                 msg = await callback.message.answer(f'ВОЗВРАТ В ИГРУ, КЛЮЧ ИГРЫ: {key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
                                                     reply_markup = await kb.game_management_menu_keys(_key=key))
                 await rq.set_main_message(callback.from_user.id, key, msg.message_id)
+
+            #Присоединение к игре не админа
             else:
                 await callback.message.answer(f'ВОЗВРАТ В ИГРУ, КЛЮЧ ИГРЫ: {key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
                                               reply_markup=kb.back_to_menu_from_lobby)

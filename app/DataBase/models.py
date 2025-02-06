@@ -31,6 +31,7 @@ class Game(Base):
     map_id: Mapped[Optional[int]] = mapped_column()
     map_size: Mapped[Optional[int]] = mapped_column()
     status: Mapped[str] = mapped_column(String(10))
+    sample_message_id: Mapped[Optional[str]] = mapped_column(String(20))
 
 class Player(Base):
     __tablename__ = 'games_players'

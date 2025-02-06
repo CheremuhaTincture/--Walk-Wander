@@ -3,6 +3,8 @@ from app.DataBase.models import User, Game, Player, Match
 from sqlalchemy import select, update, delete
 from random import randint
 
+import static.texts as tx
+
 #Управление пользователем
 async def is_registered(_chat_id):
     async with async_session() as session:
@@ -85,7 +87,7 @@ async def set_main_message(_chat_id, _key, message_id):
         change = (update(Player)
                   .where(Player.chat_id == _chat_id,
                          Player.key == _key)
-                  .values(set_main_message = str(message_id)))
+                  .values(main_message_id = str(message_id)))
         await session.execute(change)
         await session.commit()
 
@@ -138,6 +140,14 @@ async def set_game_status_started(_key):
         change = (update(Game)
                   .where(Game.key == _key)
                   .values(status = 'started'))
+        await session.execute(change)
+        await session.commit()
+
+async def set_sample_message_id(_key, id):
+    async with async_session() as session:
+        change = (update(Game)
+                  .where(Game.key == _key)
+                  .values(sample_message_id = str(id)))
         await session.execute(change)
         await session.commit()
 
@@ -239,3 +249,24 @@ async def find_game():
             return free_games_keys[randint(0, len(free_games_keys)-1)]
         else:
             return 0
+
+async def find_main_message(_key):
+    async with async_session() as session:
+        admin = await session.scalar(select(Player)
+                                     .where(Player.key == _key,
+                                            Player.admin == True))
+        return admin.main_message_id
+    
+async def get_player_name(_chat_id):
+    async with async_session() as session:
+        user = await session.scalar(select(User)
+                                    .where(User.chat_id == _chat_id))
+        
+        return user.name
+
+async def get_message_id(_key):
+    async with async_session() as session:
+        game = await session.scalar(select(Game)
+                                    .where(Game.key == _key))
+        
+        return int(game.sample_message_id)

@@ -1,11 +1,17 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
+from dotenv import load_dotenv
+
+import os
 
 import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq
 import app.states as st
 import static.funcs as fs
+import static.texts as tx
+
+load_dotenv()
 
 game_set_router = Router()
 
@@ -30,19 +36,31 @@ async def map_save(callback: CallbackQuery, state: FSMContext):
 
     try:
         await rq.update_game(_key=key, _game_info=game_info)
+
     except Exception:
         await callback.message.delete()
         await callback.message.answer('ОШИБКА СОХРАНЕНИЯ ДАННЫХ', reply_markup=kb.main_menu)
         await state.set_state(st.Mono.main_menu)
+
     else:
         await state.set_state(st.MonoGameManage.menu)
         await callback.message.delete()
+
         game_info = await rq.get_game_info(key)
-        map_name = fs.map_name(game_info['map_id'])
-        map_size = fs.map_size(game_info['map_size'])
-        status = fs.game_status(game_info['status'])
-        msg = await callback.message.answer(f'ИГРА СОЗДАНА, КЛЮЧ ИГРЫ: {key}\nКарта: {map_name}\nРазмер карты: {map_size}\nСтатус игры: {status}\nЧисло игроков: {game_info['num_of_players']}',
-                                            reply_markup = await kb.game_management_menu_keys(_key=key))
+        sample_message_text = tx.game_lobby(key, game_info, None, None, None,
+                                          await rq.everybody_are_ready(key),
+                                          None)
+
+        sample_message = await callback.bot.send_message(text=sample_message_text,
+                                                         chat_id=os.getenv('SPAM_GROUP'))
+        sample_message_id = sample_message.message_id
+
+        msg = await callback.message.answer(
+            text=sample_message_text,
+            reply_markup = await kb.game_management_menu_keys(_key=key)
+        )
+        
+        await rq.set_sample_message_id(key, sample_message_id)
         await rq.set_main_message(callback.from_user.id, key, msg.message_id)
 
 
