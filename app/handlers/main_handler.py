@@ -14,6 +14,7 @@ import static.funcs as fs
 import static.text_funcs as tf
 
 import os
+import asyncio
 
 load_dotenv()
 
@@ -26,6 +27,9 @@ async def cmd_start(message: Message, state: FSMContext):
         await state.set_state(st.Mono.main_menu)
     else:
         await reg_init(message, state, message.from_user.id)
+    if str(message.from_user.id) == os.getenv('ADMIN'):
+        task = asyncio.create_task(rq.delete_empty_games())
+        await asyncio.gather(task)
 
 @main_router.callback_query(F.data == 'menu_mono_from_support', st.Mono.text_to_support)
 async def menu_mono(callback: CallbackQuery, state: FSMContext):

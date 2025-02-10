@@ -5,6 +5,8 @@ from random import randint
 
 import static.text_funcs as tf
 
+import asyncio
+
 #Управление пользователем
 async def is_registered(_chat_id):
     async with async_session() as session:
@@ -172,20 +174,19 @@ async def set_sample_message_id(_key, id):
         await session.execute(change)
         await session.commit()
 
-async def delete_game(_key, _chat_id):
+async def delete_empty_games():
     async with async_session() as session:
-        change1 = (delete(Game)
-                  .where(Game.key == _key))
-        change2 = (delete(Player)
-                  .where(Player.key == _key,
-                         Player.chat_id == _chat_id))
-        change3 = (delete(Match)
-                  .where(Match.key == _key,
-                         Match.chat_id == _chat_id))
-        await session.execute(change1)
-        await session.execute(change2)
-        await session.execute(change3)
-        await session.commit()
+        while True:
+            await asyncio.sleep(10)
+            print('Я тупой бот меня ебут в жопу')
+            games = await session.scalars(select(Game))
+
+            for game in games:
+                if await player_count(game.key) == 0:
+                    change = (delete(Game).
+                            where(Game.key == game.key))
+                    await session.execute(change)
+                    await session.commit()
 
 
 
