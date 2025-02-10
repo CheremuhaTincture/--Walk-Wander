@@ -3,7 +3,7 @@ from app.DataBase.models import User, Game, Player, Match
 from sqlalchemy import select, update, delete
 from random import randint
 
-import static.texts as tx
+import static.text_funcs as tf
 
 #Управление пользователем
 async def is_registered(_chat_id):
@@ -115,11 +115,12 @@ async def get_main_message_ids(_key):
 
 
 #Управление игрой
-async def create_game(_chat_id):
+async def create_game(_chat_id, _game_info):
     _key = await create_key()
     async with async_session() as session:
         session.add(Game(
             key = _key,
+            map_id = _game_info["map_id"],
             map_size = 0,
             status = 'created'
         ))
@@ -147,13 +148,13 @@ async def create_key():
 
         return _key
 
-async def update_game(_key, _game_info):
-    async with async_session() as session:
-        change = (update(Game)
-                  .where(Game.key == _key)
-                  .values(map_id = _game_info["map"]))
-        await session.execute(change)
-        await session.commit()
+#async def update_game(_key, _game_info):
+#    async with async_session() as session:
+#        change = (update(Game)
+#                  .where(Game.key == _key)
+#                  .values(map_id = _game_info["map_id"]))
+#        await session.execute(change)
+#        await session.commit()
 
 async def set_game_status_started(_key):
     async with async_session() as session:
@@ -169,6 +170,21 @@ async def set_sample_message_id(_key, id):
                   .where(Game.key == _key)
                   .values(sample_message_id = str(id)))
         await session.execute(change)
+        await session.commit()
+
+async def delete_game(_key, _chat_id):
+    async with async_session() as session:
+        change1 = (delete(Game)
+                  .where(Game.key == _key))
+        change2 = (delete(Player)
+                  .where(Player.key == _key,
+                         Player.chat_id == _chat_id))
+        change3 = (delete(Match)
+                  .where(Match.key == _key,
+                         Match.chat_id == _chat_id))
+        await session.execute(change1)
+        await session.execute(change2)
+        await session.execute(change3)
         await session.commit()
 
 
@@ -236,7 +252,10 @@ async def get_game_info(_key):
 
 async def game_is_created(_key):
     async with async_session() as session:
-        game = await session.scalar(select(Game).where(Game.key == _key))
+        try:
+            game = await session.scalar(select(Game).where(Game.key == _key))
+        except Exception:
+            return False
 
         if game.status == 'created':
             return True

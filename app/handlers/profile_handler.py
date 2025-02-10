@@ -3,12 +3,13 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from dotenv import load_dotenv
 from app.keyboards.my_games_keyboard import my_games_keyboard
+from static.text_funcs import static_text
 
 import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq
 import app.states as st
 import static.funcs as fs
-import static.texts as tx
+import static.text_funcs as tf
 
 import os
 
@@ -18,7 +19,7 @@ prof_router = Router()
 
 @prof_router.callback_query(F.data == 'profile_from_nick', st.Mono.new_nickname)
 async def menu_mono(callback: CallbackQuery, state: FSMContext):
-    await callback.message.answer('ТЕКСТ ПРОФИЛЯ', reply_markup=kb.profile)
+    await callback.message.answer(text=static_text["profile"], reply_markup=kb.profile)
     await callback.message.delete()
     await state.set_state(st.Mono.main_menu)
 
@@ -29,20 +30,22 @@ async def menu_mono(callback: CallbackQuery, state: FSMContext):
 @prof_router.callback_query(F.data == 'mono_profile')
 async def open_profile(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    await callback.message.answer('ТЕКСТ ПРОФИЛЯ', reply_markup=kb.profile)
+    await callback.message.answer(text=static_text["profile"], reply_markup=kb.profile)
     await state.set_state(st.Mono.profile)
 
 @prof_router.callback_query(F.data == 'change_nickname')
 async def change_nick_begin(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    await callback.message.answer('ВВЕДИТЕ НОВЫЙ НИК', reply_markup=kb.awaiting_for_nickname)
+    await callback.message.answer(text=static_text["new_nickname"],
+                                  reply_markup=kb.awaiting_for_nickname)
     await state.set_state(st .Mono.new_nickname)
 
 @prof_router.message(st.Mono.new_nickname)
 async def save_new_name(message: Message, state: FSMContext):
     await rq.change_nick(message.from_user.id, message.text)
     await state.set_state(st.Mono.profile)
-    await message.answer('ВАШ НИК ИЗМЕНЕН', reply_markup=kb.profile)
+    await message.answer(text=static_text["new_nickname_aproved"],
+                         reply_markup=kb.profile)
 
 
 
@@ -53,11 +56,13 @@ async def access_to_icons_check(callback: CallbackQuery, state: FSMContext):
         icons_access = await rq.icons_get(callback.from_user.id)
     except Exception:
         await callback.message.delete()
-        await callback.message.answer('ОШИБКА ПОЛУЧЕНИЯ ДОСТУПА К ИКОНКАМ', reply_markup=kb.profile)
+        await callback.message.answer(text=static_text["icon_access_err"],
+                                      reply_markup=kb.profile)
         await state.set_state(st.Mono.profile)
     else:
         await callback.message.delete()
-        await callback.message.answer('ВЫБЕРИТЕ ИКОНКУ', reply_markup = await kb.icons(__chat_id = callback.from_user.id))
+        await callback.message.answer(text=static_text["choose_icon"],
+                                      reply_markup = await kb.icons(__chat_id = callback.from_user.id))
         await state.update_data(access = fs.decode(icons_access))
         await state.set_state(st.Mono.change_icon)
 
@@ -73,11 +78,14 @@ async def save_icon(callback: CallbackQuery, state: FSMContext):
         try:
             await rq.icon_change(_chat_id = callback.from_user.id, _icon_id = icon_id)
         except Exception:
-            await callback.message.answer('ОШИБКА УСТАНОВКИ ИКОНКИ', reply_markup=kb.profile)
+            await callback.message.answer(text=static_text["icon_set_err"],
+                                          reply_markup=kb.profile)
         else:
-            await callback.message.answer('ИЗМЕНЕНИЯ СОХРАНЕНЫ', reply_markup=kb.profile)
+            await callback.message.answer(text=static_text["icon_set"],
+                                          reply_markup=kb.profile)
     else:
-            await callback.message.answer('НЕТ ДОСТУПА К ИКОНКЕ', reply_markup=kb.profile)
+            await callback.message.answer(text=static_text["no_access"],
+                                          reply_markup=kb.profile)
 
 
 
@@ -87,10 +95,11 @@ async def my_games(callback: CallbackQuery):
     await callback.message.delete()
 
     try:
-        await callback.message.answer('ВОТ ВАШИ ИГРЫ',
+        await callback.message.answer(text=static_text["my_games"],
                                       reply_markup = await my_games_keyboard(0, callback.from_user.id))
     except Exception:
-        await callback.message.answer('ОШИБКА ПОЛУЧЕНИЯ ИНФОРМАЦИИ ОБ ИГРАХ', reply_markup=kb.profile) 
+        await callback.message.answer(text=static_text["games_loading_err"],
+                                      reply_markup=kb.profile) 
 
 @prof_router.callback_query(F.data.startswith('game_number-'))
 async def get_game(callback: CallbackQuery, state: FSMContext):
@@ -100,7 +109,8 @@ async def get_game(callback: CallbackQuery, state: FSMContext):
     try:
         game_info = await rq.get_game_info(key)
     except Exception:
-        await callback.message.answer('ОШИБКА ПОЛУЧЕНИЯ ИНФОРМАЦИИ ОБ ИГРЕ', reply_markup=kb.profile) 
+        await callback.message.answer(text=static_text["game_loading_err"],
+                                      reply_markup=kb.profile) 
     else:
         map_name = fs.map_name(game_info['map_id'])
         map_size = fs.map_size(game_info['map_size'])
@@ -118,13 +128,13 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
             await state.set_state(st.MonoGameManage.menu)
             await callback.message.delete()
                 
-            old_text = await tx.get_sample_message_text(key, callback.message)
+            old_text = await tf.get_sample_message_text(key, callback.message)
             await rq.join_game(callback.from_user.id, key)
 
             #Присоединение к игре админа
             if await rq.player_is_admin(callback.from_user.id, key):
 
-                sample_message_text = tx.game_lobby(
+                sample_message_text = tf.game_lobby(
                     key, game_info,
                     await rq.get_player_name(callback.from_user.id),
                     None, None, await rq.everybody_are_ready(key),
@@ -140,7 +150,7 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
             #Присоединение к игре не админа
             else:
 
-                sample_message_text = tx.game_lobby(
+                sample_message_text = tf.game_lobby(
                     key, game_info,
                     await rq.get_player_name(callback.from_user.id),
                     None, None, await rq.everybody_are_ready(key),
@@ -153,7 +163,7 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
                 )
                 await rq.set_main_message(callback.from_user.id, key, msg.message_id)
 
-                await tx.change_text(key, sample_message_text, callback.message)
+                await tf.change_text(key, sample_message_text, callback.message)
 
                 sample_message = await callback.bot.send_message(text=sample_message_text,
                                                         chat_id=os.getenv('SPAM_GROUP'))
@@ -161,11 +171,11 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
                 await rq.set_sample_message_id(key, sample_message_id)
         else:
             await callback.message.delete()
-            await callback.message.answer('К ЭТОЙ ИГРЕ ПРИСОЕДИНИТЬСЯ УЖЕ НЕЛЬЗЯ',
+            await callback.message.answer(text=static_text["cant_return"],
                                           reply_markup = await my_games_keyboard(0, callback.from_user.id))
     except Exception:
         await callback.message.delete()
-        await callback.message.answer('ОШИБКА ПОЛУЧЕНИЯ ДАННЫХ', reply_markup=kb.main_menu)
+        await callback.message.answer(text=static_text["game_connection_err"], reply_markup=kb.main_menu)
         await state.set_state(st.Mono.main_menu)
 
 @prof_router.callback_query(F.data.startswith('game_erase-'))
@@ -173,7 +183,7 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
     key = callback.data.split('-')[1]
 
     try:
-        old_text = await tx.get_sample_message_text(key, callback.message)
+        old_text = await tf.get_sample_message_text(key, callback.message)
         is_admin = await rq.player_is_admin(callback.from_user.id, key)
         await rq.erase_player(_chat_id=callback.from_user.id, _key=key)
         game_info = await rq.get_game_info(key)
@@ -182,7 +192,7 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
 
             exited_player = 'Организатор ' + await rq.get_player_name(callback.from_user.id)
 
-            sample_message_text = tx.game_lobby(
+            sample_message_text = tf.game_lobby(
                 key, 
                 game_info,
                 None,
@@ -197,7 +207,7 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
 
             exited_player = 'Игрок ' + await rq.get_player_name(callback.from_user.id)
 
-            sample_message_text = tx.game_lobby(
+            sample_message_text = tf.game_lobby(
                 key, 
                 game_info,
                 None,
@@ -207,7 +217,7 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
                 old_text
             )
 
-        await tx.change_text(key, sample_message_text, callback.message)
+        await tf.change_text(key, sample_message_text, callback.message)
 
         sample_message = await callback.bot.send_message(text=sample_message_text,
                                                          chat_id=os.getenv('SPAM_GROUP'))
@@ -217,9 +227,10 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
 
     except Exception:
         await callback.message.delete()
-        await callback.message.answer('ОШИБКА УДАЛЕНИЯ ДАННЫХ', reply_markup=kb.main_menu)
+        await callback.message.answer(text=static_text["delete_err"],
+                                      reply_markup=kb.main_menu)
         await state.set_state(st.Mono.main_menu)
     else:
         await callback.message.delete()
-        await callback.message.answer(f'ДАННЫЕ УДАЛЕНЫ',
+        await callback.message.answer(text=static_text["deleted"],
                                       reply_markup = await my_games_keyboard(0, callback.from_user.id))

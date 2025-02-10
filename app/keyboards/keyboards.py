@@ -5,23 +5,50 @@ from aiogram.types import (
 
 import app.DataBase.requests as rq
 
-main_menu = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [
-            InlineKeyboardButton(text='⚜️Случайная игра⚜️', callback_data='mono_random')
-        ],
-        [
-            InlineKeyboardButton(text='🔮Создать🔮', callback_data='mono_new')
-        ],
-        [
-            InlineKeyboardButton(text='🎟️Присоединиться по коду🎟️', callback_data='mono_code')
-        ],
-        [
-            InlineKeyboardButton(text='👑Профиль👑', callback_data='mono_profile'),
-            InlineKeyboardButton(text='🔱Поддержка🔱', callback_data='mono_support')
-        ]
-    ]
-)
+import random
+
+def main_menu(_shuffle: bool):
+    if not _shuffle:
+        return InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(text='⚜️Случайная игра⚜️', callback_data='mono_random')
+                ],
+                [
+                    InlineKeyboardButton(text='🔮Создать🔮', callback_data='mono_new')
+                ],
+                [
+                    InlineKeyboardButton(text='🎟️Присоединиться по коду🎟️', callback_data='mono_code')
+                ],
+                [
+                    InlineKeyboardButton(text='👑Профиль👑', callback_data='mono_profile'),
+                    InlineKeyboardButton(text='🔱Поддержка🔱', callback_data='mono_support')
+                ]
+            ]
+        )
+    else:
+            button1 = InlineKeyboardButton(text='⚜️Случайная игра⚜️', callback_data='mono_random')
+            button2 = InlineKeyboardButton(text='🔮Создать🔮', callback_data='mono_new')
+            button3 = InlineKeyboardButton(text='🎟Присоединиться по коду🎟', callback_data='mono_code')
+            button4 = InlineKeyboardButton(text='👑Профиль👑', callback_data='mono_profile')
+            button5 = InlineKeyboardButton(text='🔱Поддержка🔱', callback_data='mono_support')
+
+            buttons = [button1, button2, button4, button5]
+            
+            random.shuffle(buttons)
+
+            string_of_two_buttons = []
+            string_of_two_buttons.extend(buttons[:2])
+            buttons.append(button3)
+            keys = [string_of_two_buttons]
+
+            for i in range(2, 5):
+                keys.append([buttons[i]])
+            
+            random.shuffle(keys)
+            
+            return InlineKeyboardMarkup(inline_keyboard=keys) 
+        
 
 back_to_menu = InlineKeyboardMarkup(
     inline_keyboard=[
@@ -95,13 +122,16 @@ async def maps_keys(_key, scnd_time):
     keys = [
         [
             InlineKeyboardButton(text='🏰Карта 1🏰', callback_data=f'map_1_{_key}')
+        ],
+        [
+            InlineKeyboardButton(text='🏜️Карта 2🏜️', callback_data=f'map_2_{_key}')
         ]
     ]
 
     if not scnd_time:
         keys.append(
             [
-                InlineKeyboardButton(text='🏠В меню🏠', callback_data='menu_mono')
+                InlineKeyboardButton(text='🏠В меню🏠', callback_data=f'menu_mono')
             ]
         )
     else:

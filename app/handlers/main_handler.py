@@ -5,12 +5,13 @@ from aiogram.fsm.context import FSMContext
 from dotenv import load_dotenv
 from app.handlers.reg_handler import reg_init
 from app.handlers.game_manage_handler import game_create_init
+from static.text_funcs import static_text
 
 import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq
 import app.states as st
 import static.funcs as fs
-import static.texts as tx
+import static.text_funcs as tf
 
 import os
 
@@ -21,14 +22,15 @@ main_router = Router()
 @main_router.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext):
     if await rq.is_registered(message.from_user.id):
-        await message.answer('ПРИВЕТСТВИЕ', reply_markup=kb.main_menu)
+        await message.answer(text = static_text['greetings'], reply_markup=kb.main_menu(False))
         await state.set_state(st.Mono.main_menu)
     else:
         await reg_init(message, state, message.from_user.id)
 
 @main_router.callback_query(F.data == 'menu_mono_from_support', st.Mono.text_to_support)
 async def menu_mono(callback: CallbackQuery, state: FSMContext):
-    await callback.message.answer('ТЕКСТ МЕНЮ', reply_markup=kb.main_menu)
+    menu_text, shuffle = tf.get_random_menu_text()
+    await callback.message.answer(text=menu_text, reply_markup=kb.main_menu(shuffle))
     await callback.message.delete()
     await state.set_state(st.Mono.main_menu)
 
@@ -38,22 +40,24 @@ async def menu_mono(callback: CallbackQuery, state: FSMContext):
 
 @main_router.callback_query(F.data == 'menu_mono')
 async def menu_mono(callback: CallbackQuery, state: FSMContext):
-    await callback.message.answer('ТЕКСТ МЕНЮ', reply_markup=kb.main_menu)
+    menu_text, shuffle = tf.get_random_menu_text()
+    await callback.message.answer(text=menu_text, reply_markup=kb.main_menu(shuffle))
     await callback.message.delete()
     await state.set_state(st.Mono.main_menu)
 
 @main_router.callback_query(F.data.startswith('menu_mono_from_lobby-'))
 async def menu_mono(callback: CallbackQuery, state: FSMContext):
     await rq.deactivate_player(callback.from_user.id)
-    await callback.message.answer('ТЕКСТ МЕНЮ', reply_markup=kb.main_menu)
+    menu_text, shuffle = tf.get_random_menu_text()
+    await callback.message.answer(text=menu_text, reply_markup=kb.main_menu(shuffle))
     await callback.message.delete()
     await state.set_state(st.Mono.main_menu)
 
     key = callback.data.split('-')[1]
     game_info = await rq.get_game_info(key)
-    old_text = await tx.get_sample_message_text(key, callback.message)
+    old_text = await tf.get_sample_message_text(key, callback.message)
         
-    sample_message_text = tx.game_lobby(
+    sample_message_text = tf.game_lobby(
         _key = key, 
         _game_info = game_info,
         new_player_name = None, 
@@ -63,7 +67,7 @@ async def menu_mono(callback: CallbackQuery, state: FSMContext):
         prev_text = old_text
     )
 
-    await tx.change_text(key, sample_message_text, callback.message)
+    await tf.change_text(key, sample_message_text, callback.message)
 
     sample_message = await callback.bot.send_message(text=sample_message_text,
                                             chat_id=os.getenv('SPAM_GROUP'))
@@ -76,14 +80,16 @@ async def menu_mono(callback: CallbackQuery, state: FSMContext):
 
 @main_router.callback_query(F.data == 'mono_support')
 async def mono_support(callback: CallbackQuery, state: FSMContext):
-    await callback.message.answer('ТЕКСТ ПОДДЕРЖКИ', reply_markup=kb.awaiting_for_text)
+    await callback.message.answer(text=tf.static_text['waiting_for_problem'],
+                                  reply_markup=kb.awaiting_for_text)
     await callback.message.delete()
     await state.set_state(st.Mono.text_to_support)
 
 @main_router.message(st.Mono.text_to_support)
 async def sending_text(message: Message, state: FSMContext):
     await state.set_state(st.Mono.main_menu)
-    await message.answer('ТЕКСТ ОТПРАВКИ', reply_markup=kb.main_menu)
+    menu_text, shuffle = tf.get_random_menu_text()
+    await message.answer(text=menu_text, reply_markup=kb.main_menu(shuffle))
     await message.bot.send_message(chat_id=int(os.getenv('SUPPORT_GROUP')),
                                    text=f'Сообщение от пользователя {message.from_user.id}:\n\n'+message.text)
 
@@ -93,7 +99,7 @@ async def support_answer(message: Message):
         chat_id = int(message.text.split('_')[0])
         text = message.text.split('_')[1]
         await message.bot.send_message(chat_id=chat_id,
-                                    text='Ответ от поддержки!\n\n'+text)
+                                    text='Ответ от моих спецов!\n\n'+text)
         
 
 
@@ -105,7 +111,7 @@ async def new_game(callback: CallbackQuery, state: FSMContext):
 @main_router.callback_query(F.data == 'mono_code')
 async def enter_by_code(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
-    await callback.message.answer('ВВЕДИТЕ КОД ИГРЫ', reply_markup=kb.back_to_menu)
+    await callback.message.answer(static_text['enter_code'], reply_markup=kb.back_to_menu)
     await state.set_state(st.Mono.game_key)
 
 @main_router.message(st.Mono.game_key)
@@ -117,12 +123,12 @@ async def check_key(message: Message, state: FSMContext):
                 await rq.join_game(message.from_user.id, key)
                 game_info = await rq.get_game_info(key)
                 
-                old_text = await tx.get_sample_message_text(key, message)
+                old_text = await tf.get_sample_message_text(key, message)
 
                 #Админ в хате
                 if await rq.player_is_admin(message.from_user.id, key):
 
-                    sample_message_text = tx.game_lobby(
+                    sample_message_text = tf.game_lobby(
                         key, game_info,
                         await rq.get_player_name(message.from_user.id),
                         None, None, await rq.everybody_are_ready(key),
@@ -138,7 +144,7 @@ async def check_key(message: Message, state: FSMContext):
                 #Нормисы
                 else:
 
-                    sample_message_text = tx.game_lobby(
+                    sample_message_text = tf.game_lobby(
                         key, game_info,
                         await rq.get_player_name(message.from_user.id),
                         None, None, await rq.everybody_are_ready(key),
@@ -151,7 +157,7 @@ async def check_key(message: Message, state: FSMContext):
                     )
                     await rq.set_main_message(message.from_user.id, key, msg.message_id)
 
-                    await tx.change_text(key, sample_message_text, message)
+                    await tf.change_text(key, sample_message_text, message)
 
                     sample_message = await message.bot.send_message(text=sample_message_text,
                                                          chat_id=os.getenv('SPAM_GROUP'))
@@ -159,16 +165,16 @@ async def check_key(message: Message, state: FSMContext):
                     await rq.set_sample_message_id(key, sample_message_id)
                     
             else:
-                await message.answer('К ЭТОЙ ИГРЕ ПРИСОЕДИНИТЬСЯ УЖЕ НЕЛЬЗЯ',
+                await message.answer(text=static_text["game_unaccessible"],
                                      reply_markup=kb.main_menu)
 
         except Exception:
-            await message.answer('ОШИБКА ПРИ ПРИСОЕДИНЕНИИ',
+            await message.answer(text=static_text["game_connection_err"],
                                  reply_markup=kb.main_menu)
             
         await state.clear()
     else:
-        await message.answer('ВВЕДИТЕ КОРРЕКТНЫЙ КОД')
+        await message.answer(text=static_text["incorrect_code"])
 
 @main_router.callback_query(F.data == 'mono_random')
 async def enter_random(callback: CallbackQuery):
@@ -183,12 +189,12 @@ async def enter_random(callback: CallbackQuery):
                 await rq.join_game(callback.from_user.id, key)
                 game_info = await rq.get_game_info(key)
                 
-                old_text = await tx.get_sample_message_text(key, message)
+                old_text = await tf.get_sample_message_text(key, message)
 
                 #Админ в хате
                 if await rq.player_is_admin(callback.from_user.id, key):
 
-                    sample_message_text = tx.game_lobby(
+                    sample_message_text = tf.game_lobby(
                         key, game_info,
                         await rq.get_player_name(callback.from_user.id),
                         None, None, await rq.everybody_are_ready(key),
@@ -204,7 +210,7 @@ async def enter_random(callback: CallbackQuery):
                 #Нормисы
                 else:
 
-                    sample_message_text = tx.game_lobby(
+                    sample_message_text = tf.game_lobby(
                         key, game_info,
                         await rq.get_player_name(callback.from_user.id),
                         None, None, await rq.everybody_are_ready(key),
@@ -217,7 +223,7 @@ async def enter_random(callback: CallbackQuery):
                     )
                     await rq.set_main_message(callback.from_user.id, key, msg.message_id)
 
-                    await tx.change_text(key, sample_message_text, message)
+                    await tf.change_text(key, sample_message_text, message)
 
                     sample_message = await message.bot.send_message(text=sample_message_text,
                                                          chat_id=os.getenv('SPAM_GROUP'))
@@ -225,11 +231,11 @@ async def enter_random(callback: CallbackQuery):
                     await rq.set_sample_message_id(key, sample_message_id)
 
             except Exception:
-                await message.answer('ОШИБКА ПРИ ПРИСОЕДИНЕНИИ',
+                await message.answer(text=static_text["game_connection_err"],
                                     reply_markup=kb.main_menu)
         
         else:
-            await message.answer('СВОБОДНЫХ ИГР НЕТ',
+            await message.answer(tsxt=static_text["no_games_avalible"],
                                     reply_markup=kb.main_menu)
 
 
