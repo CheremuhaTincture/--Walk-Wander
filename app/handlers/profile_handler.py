@@ -136,7 +136,7 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
 
                 sample_message_text = tf.game_lobby(
                     key, game_info,
-                    await rq.get_player_name(callback.from_user.id),
+                    None,
                     None, None, await rq.everybody_are_ready(key),
                     old_text
                 )

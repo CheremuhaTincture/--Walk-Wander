@@ -20,4 +20,4 @@ async def save_name(message: Message, state: FSMContext):
     await state.set_state(st.Mono.main_menu)
     user_info = await state.get_data()
     await rq.add_user(user_info)
-    await message.answer(text = static_text['menu_from_reg'], reply_markup=kb.main_menu)
+    await message.answer(text = static_text["menu_from_reg"], reply_markup=kb.main_menu(False))

@@ -150,13 +150,13 @@ async def create_key():
 
         return _key
 
-#async def update_game(_key, _game_info):
-#    async with async_session() as session:
-#        change = (update(Game)
-#                  .where(Game.key == _key)
-#                  .values(map_id = _game_info["map_id"]))
-#        await session.execute(change)
-#        await session.commit()
+async def update_game(_key, _game_info):
+    async with async_session() as session:
+        change = (update(Game)
+                  .where(Game.key == _key)
+                  .values(map_id = _game_info["map_id"]))
+        await session.execute(change)
+        await session.commit()
 
 async def set_game_status_started(_key):
     async with async_session() as session:
