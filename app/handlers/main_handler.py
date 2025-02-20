@@ -170,11 +170,11 @@ async def check_key(message: Message, state: FSMContext):
                     
             else:
                 await message.answer(text=static_text["game_unaccessible"],
-                                     reply_markup=kb.main_menu)
+                                     reply_markup=kb.main_menu(False))
 
         except Exception:
             await message.answer(text=static_text["game_connection_err"],
-                                 reply_markup=kb.main_menu)
+                                 reply_markup=kb.main_menu(False))
             
         await state.clear()
     else:
@@ -236,11 +236,11 @@ async def enter_random(callback: CallbackQuery):
 
             except Exception:
                 await message.answer(text=static_text["game_connection_err"],
-                                    reply_markup=kb.main_menu)
+                                    reply_markup=kb.main_menu(False))
         
         else:
             await message.answer(tsxt=static_text["no_games_avalible"],
-                                    reply_markup=kb.main_menu)
+                                    reply_markup=kb.main_menu(False))
 
 
 @main_router.callback_query(F.data == 'null')

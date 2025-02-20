@@ -122,10 +122,10 @@ async def maps_keys(_key, scnd_time):
     keys = [
         [
             InlineKeyboardButton(text='🏰Карта 1🏰', callback_data=f'map_1_{_key}')
-        ],
-        [
-            InlineKeyboardButton(text='🏜️Карта 2🏜️', callback_data=f'map_2_{_key}')
         ]
+        #[
+        #    InlineKeyboardButton(text='🏜️Карта 2🏜️', callback_data=f'map_2_{_key}')
+        #]
     ]
 
     if not scnd_time:

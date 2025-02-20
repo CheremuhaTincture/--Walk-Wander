@@ -39,6 +39,8 @@ def game_lobby(_key, _game_info, new_player_name, player_exit_name, player_erase
             text_changed2 = f'Текущее число игроков: {num_of_players}\nОжидание игроков...🕝'
         if (not everybody_are_ready) and (num_of_players != 1):
             text_changed2 = f'Текущее число игроков: {num_of_players}\nОжидание готовности игроков...🕝'
+        if (not everybody_are_ready) and (num_of_players == 1):
+            text_changed2 = f'Текущее число игроков: {num_of_players}\nНу и куда все ушли?!🤬'
         text = text0 + text_changed1 + text_changed2
     return text
 

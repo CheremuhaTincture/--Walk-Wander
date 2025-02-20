@@ -177,12 +177,13 @@ async def set_sample_message_id(_key, id):
 async def delete_empty_games():
     async with async_session() as session:
         while True:
-            await asyncio.sleep(10)
-            print('Я тупой бот меня ебут в жопу')
+            await asyncio.sleep(15)
+            print('wnw_dg_tick')
             games = await session.scalars(select(Game))
 
             for game in games:
-                if await player_count(game.key) == 0:
+                amount_of_players = await player_count(game.key)
+                if amount_of_players == 0:
                     change = (delete(Game).
                             where(Game.key == game.key))
                     await session.execute(change)
