@@ -2,15 +2,15 @@ from aiogram import Router, F
 from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 from dotenv import load_dotenv
-from static.text_funcs import static_text
+from app.static.text_funcs import static_text
+from app.handlers.gameplay_manager import game_start
 
 import os
 
 import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq
 import app.states as st
-import static.funcs as fs
-import static.text_funcs as tf
+import app.static.text_funcs as tf
 
 load_dotenv()
 
@@ -102,7 +102,7 @@ async def back_to_manage_from_map_reset(callback: CallbackQuery, state: FSMConte
         )
         await rq.set_main_message(callback.from_user.id, key, msg.message_id)
 
-        await tf.change_text(key, sample_message_text, message)
+        await tf.change_text_lobby(key, sample_message_text, message)
 
         sample_message = await message.bot.send_message(text=sample_message_text,
                                                 chat_id=os.getenv('SPAM_GROUP'))
@@ -149,7 +149,7 @@ async def map_save(callback: CallbackQuery, state: FSMContext):
             )
             await rq.set_main_message(callback.from_user.id, key, msg.message_id)
 
-            await tf.change_text(key, sample_message_text, message)
+            await tf.change_text_lobby(key, sample_message_text, message)
 
             sample_message = await message.bot.send_message(text=sample_message_text,
                                                     chat_id=os.getenv('SPAM_GROUP'))
@@ -187,7 +187,8 @@ async def start_game(callback: CallbackQuery, state: FSMContext):
                 await callback.message.answer(text=static_text["status_giving_err"],
                                               reply_markup = await kb.game_management_menu_keys(_key=key))
                 
-            #else:
+            else:
+                await game_start(key, callback)
 
         if not everybody_are_ready:
             await callback.answer('Кто-то из игроков не зашел в лобби', show_alert=True)

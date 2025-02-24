@@ -32,6 +32,7 @@ class Game(Base):
     map_size: Mapped[Optional[int]] = mapped_column()
     status: Mapped[str] = mapped_column(String(10))
     sample_message_id: Mapped[Optional[str]] = mapped_column(String(20))
+    turn: Mapped[int] = mapped_column()
 
 class Player(Base):
     __tablename__ = 'games_players'
@@ -42,6 +43,8 @@ class Player(Base):
     admin: Mapped[bool] = mapped_column()
     in_lobby: Mapped[bool] = mapped_column()
     main_message_id: Mapped[Optional[str]] = mapped_column(String(20))
+    index: Mapped[Optional[int]] = mapped_column()
+    score: Mapped[float] = mapped_column()
 
 class Addon(Base):
     __tablename__ = 'games_addons'

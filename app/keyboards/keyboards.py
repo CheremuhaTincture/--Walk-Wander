@@ -91,6 +91,14 @@ profile = InlineKeyboardMarkup(
     ]
 )
 
+gameplay_menu = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(text='🎲', callback_data='dice_rolled')
+            ]
+        ]
+    )
+
 async def icons(__chat_id):
     icon_id = await rq.chosen_icon(_chat_id=__chat_id)
 

@@ -5,13 +5,12 @@ from aiogram.fsm.context import FSMContext
 from dotenv import load_dotenv
 from app.handlers.reg_handler import reg_init
 from app.handlers.game_manage_handler import game_create_init
-from static.text_funcs import static_text
+from app.static.text_funcs import static_text
 
 import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq
 import app.states as st
-import static.funcs as fs
-import static.text_funcs as tf
+import app.static.text_funcs as tf
 
 import os
 import asyncio
@@ -30,6 +29,10 @@ async def cmd_start(message: Message, state: FSMContext):
     if str(message.from_user.id) == os.getenv('ADMIN'):
         task = asyncio.create_task(rq.delete_empty_games())
         await asyncio.gather(task)
+
+@main_router.message(F.text == 'Оплошность0204')
+async def delete_message(message: Message):
+    await message.delete()
 
 @main_router.callback_query(F.data == 'menu_mono_from_support', st.Mono.text_to_support)
 async def menu_mono(callback: CallbackQuery, state: FSMContext):
@@ -71,7 +74,7 @@ async def menu_mono(callback: CallbackQuery, state: FSMContext):
         prev_text = old_text
     )
 
-    await tf.change_text(key, sample_message_text, callback.message)
+    await tf.change_text_lobby(key, sample_message_text, callback.message)
 
     sample_message = await callback.bot.send_message(text=sample_message_text,
                                             chat_id=os.getenv('SPAM_GROUP'))
@@ -161,7 +164,7 @@ async def check_key(message: Message, state: FSMContext):
                     )
                     await rq.set_main_message(message.from_user.id, key, msg.message_id)
 
-                    await tf.change_text(key, sample_message_text, message)
+                    await tf.change_text_lobby(key, sample_message_text, message)
 
                     sample_message = await message.bot.send_message(text=sample_message_text,
                                                          chat_id=os.getenv('SPAM_GROUP'))
@@ -227,7 +230,7 @@ async def enter_random(callback: CallbackQuery):
                     )
                     await rq.set_main_message(callback.from_user.id, key, msg.message_id)
 
-                    await tf.change_text(key, sample_message_text, message)
+                    await tf.change_text_lobby(key, sample_message_text, message)
 
                     sample_message = await message.bot.send_message(text=sample_message_text,
                                                          chat_id=os.getenv('SPAM_GROUP'))

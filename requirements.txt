@@ -3,3 +3,4 @@ aiosqlite
 sqlalchemy
 python-dotenv
 asyncio
+Pillow

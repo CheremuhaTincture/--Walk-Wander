@@ -6,7 +6,7 @@ from aiogram.types import (
 )
 
 import app.DataBase.requests as rq
-import static.funcs as fs
+import app.static.funcs as fs
 
 my_g_kb_router = Router()
 
@@ -58,7 +58,7 @@ async def my_games_keyboard(_page_no, _chat_id):
 
 @my_g_kb_router.callback_query(F.data.startswith('my_g_left-'))
 async def page_left(callback: CallbackQuery):
-    page_no = callback.data.split('-')[1] - 1
+    page_no = int(callback.data.split('-')[1]) - 1
     
     await callback.answer()
     await callback.message.edit_text(text='ВОТ ВАШИ ИГРЫ', 
@@ -67,7 +67,7 @@ async def page_left(callback: CallbackQuery):
 
 @my_g_kb_router.callback_query(F.data.startswith('my_g_right'))
 async def page_left(callback: CallbackQuery):
-    page_no = callback.data.split('-')[1] + 1
+    page_no = int(callback.data.split('-')[1]) + 1
     
     await callback.answer()
     await callback.message.edit_text(text='ВОТ ВАШИ ИГРЫ', 

@@ -3,9 +3,10 @@ from app.DataBase.models import User, Game, Player, Match
 from sqlalchemy import select, update, delete
 from random import randint
 
-import static.text_funcs as tf
+import app.static.text_funcs as tf
 
 import asyncio
+import random
 
 #Управление пользователем
 async def is_registered(_chat_id):
@@ -62,7 +63,8 @@ async def join_game(_chat_id, _key):
                 chat_id = _chat_id,
                 key = _key,
                 admin = False,
-                in_lobby = True
+                in_lobby = True,
+                score = 0.0
             ))
             await session.commit()
         else:
@@ -112,6 +114,70 @@ async def get_main_message_ids(_key):
                 message_ids.append(player.main_message_id+'_'+str(player.chat_id))
         
         return message_ids
+    
+async def get_main_message_ids_n_index(_key):
+    async with async_session() as session:
+        players = await session.scalars(select(Player)
+                                        .where(Player.key == _key))
+        
+        message_ids = []
+
+        for player in players:
+            if player.main_message_id != None:
+                message_ids.append(player.main_message_id+'_'+str(player.chat_id)+'_'+str(player.index))
+        
+        return message_ids
+
+async def create_queue(_key):
+    async with async_session() as session:
+        players = await session.scalars(select(Player)
+                                        .where(Player.key == _key))
+        ids = []
+        for player in players:
+            ids.append(player.id)
+        
+        random.shuffle(ids)
+
+        for i in range(0, len(ids)):
+            change = (update(Player)
+                      .where(Player.id == ids[i])
+                      .values(index = i))
+            await session.execute(change)
+        await session.commit()
+
+async def get_queue(_key):
+    async with async_session() as session:
+        names = []
+        #ИСПРАВИТЬ БЕСКОНЕЧНЫЙ ЦИКЛ
+        i = 0
+        while True:
+            player = await session.scalar(select(Player)
+                                          .where(Player.key == _key,
+                                                 Player.index == i))
+            if not player:
+                break
+
+            user = await session.scalar(select(User)
+                                        .where(User.chat_id == player.chat_id))
+            names.append(user.name)
+            i += 1
+        
+        return names
+    
+async def get_leader(_key):
+    async with async_session() as session:
+        players = await session.scalars(select(Player)
+                                        .where(Player.key == _key))
+
+        max_score = 0.0
+        leader = 0
+
+        for player in players:
+            if player.score >= max_score:
+                leader = player.index
+                max_score = player.score
+        
+        return leader
 
 
 
@@ -124,13 +190,15 @@ async def create_game(_chat_id, _game_info):
             key = _key,
             map_id = _game_info["map_id"],
             map_size = 0,
-            status = 'created'
+            status = 'created',
+            turn = 0
         ))
         session.add(Player(
             key = _key,
             chat_id = _chat_id,
             admin = True,
-            in_lobby = True
+            in_lobby = True,
+            score = 0.0
         ))
         session.add(Match(
             chat_id = _chat_id,
@@ -313,3 +381,10 @@ async def get_message_id(_key):
                                     .where(Game.key == _key))
         
         return int(game.sample_message_id)
+
+async def get_turn(_key):
+    async with async_session() as session:
+        game = await session.scalar(select(Game)
+                                    .where(Game.key == _key))
+        
+        return game.turn

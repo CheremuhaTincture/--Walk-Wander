@@ -1,7 +1,7 @@
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
-from static.text_funcs import static_text
+from app.static.text_funcs import static_text
 
 import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq

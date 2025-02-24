@@ -3,13 +3,13 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from dotenv import load_dotenv
 from app.keyboards.my_games_keyboard import my_games_keyboard
-from static.text_funcs import static_text
+from app.static.text_funcs import static_text
 
 import app.keyboards.keyboards as kb
 import app.DataBase.requests as rq
 import app.states as st
-import static.funcs as fs
-import static.text_funcs as tf
+import app.static.funcs as fs
+import app.static.text_funcs as tf
 
 import os
 
@@ -163,7 +163,7 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
                 )
                 await rq.set_main_message(callback.from_user.id, key, msg.message_id)
 
-                await tf.change_text(key, sample_message_text, callback.message)
+                await tf.change_text_lobby(key, sample_message_text, callback.message)
 
                 sample_message = await callback.bot.send_message(text=sample_message_text,
                                                         chat_id=os.getenv('SPAM_GROUP'))
@@ -217,7 +217,7 @@ async def return_to_game(callback: CallbackQuery, state: FSMContext):
                 old_text
             )
 
-        await tf.change_text(key, sample_message_text, callback.message)
+        await tf.change_text_lobby(key, sample_message_text, callback.message)
 
         sample_message = await callback.bot.send_message(text=sample_message_text,
                                                          chat_id=os.getenv('SPAM_GROUP'))
