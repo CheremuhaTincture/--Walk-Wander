@@ -42,9 +42,10 @@ class Player(Base):
     chat_id = mapped_column(BigInteger)
     admin: Mapped[bool] = mapped_column()
     in_lobby: Mapped[bool] = mapped_column()
-    main_message_id: Mapped[Optional[str]] = mapped_column(String(20))
+    main_message_id: Mapped[Optional[str]] = mapped_column(String(10))
+    event_message_id: Mapped[Optional[str]] = mapped_column(String(10))
     index: Mapped[Optional[int]] = mapped_column()
-    score: Mapped[float] = mapped_column()
+    score: Mapped[int] = mapped_column()
 
 class Addon(Base):
     __tablename__ = 'games_addons'

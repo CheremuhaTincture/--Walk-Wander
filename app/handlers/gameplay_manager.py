@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import CallbackQuery
 from aiogram.fsm.context import FSMContext
 from dotenv import load_dotenv
 
@@ -14,7 +14,7 @@ load_dotenv()
 
 gameplay_router = Router()
 
-async def game_start(key, callback: CallbackQuery):
+async def game_start(key, callback: CallbackQuery, state_storage):
 
     #СОЗДАНИЕ ОЧЕРЕДНОСТИ ХОДА
     await rq.create_queue(key)
@@ -35,9 +35,7 @@ async def game_start(key, callback: CallbackQuery):
         current_leader = leader
     )
 
-    #sample_message = await callback.bot.send_message(text=sample_message_text,
-    #                                                 chat_id=os.getenv('SPAM_GROUP'))
-    #sample_message_id = sample_message.message_id
+    await tf.change_lobby_text_to_gameplay(key, sample_message_text, game_info["map_id"], callback, state_storage)
 
-    await tf.change_text_lobby_to_gameplay(key, sample_message_text, callback)
-    #await rq.set_sample_message_id(key, sample_message_id)
+#@gameplay_router.callback_query(F.data == 'dice_rolled')
+#async def inc_score(callback: CallbackQuery):

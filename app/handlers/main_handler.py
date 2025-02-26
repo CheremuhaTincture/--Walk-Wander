@@ -30,10 +30,6 @@ async def cmd_start(message: Message, state: FSMContext):
         task = asyncio.create_task(rq.delete_empty_games())
         await asyncio.gather(task)
 
-@main_router.message(F.text == 'Оплошность0204')
-async def delete_message(message: Message):
-    await message.delete()
-
 @main_router.callback_query(F.data == 'menu_mono_from_support', st.Mono.text_to_support)
 async def menu_mono(callback: CallbackQuery, state: FSMContext):
     menu_text, shuffle = tf.get_random_menu_text()

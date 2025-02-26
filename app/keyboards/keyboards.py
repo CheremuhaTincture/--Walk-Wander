@@ -92,9 +92,9 @@ profile = InlineKeyboardMarkup(
 )
 
 gameplay_menu = InlineKeyboardMarkup(
-        inline_keyboard=[
+        inlinekeyboard=[
             [
-                InlineKeyboardButton(text='🎲', callback_data='dice_rolled')
+                KeyboardButton(text='Сделать ход 🎲', callback_data='dice_rolled')
             ]
         ]
     )

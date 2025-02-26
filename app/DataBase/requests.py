@@ -102,6 +102,16 @@ async def set_main_message(_chat_id, _key, message_id):
         await session.execute(change)
         await session.commit()
 
+async def set_event_n_main_msg(_chat_id, _key, event_msg_id, main_msg_id):
+    async with async_session() as session:
+        change = (update(Player)
+                  .where(Player.chat_id == _chat_id,
+                         Player.key == _key)
+                  .values(event_message_id = str(event_msg_id),
+                          main_message_id = str(main_msg_id)))
+        await session.execute(change)
+        await session.commit()
+
 async def get_main_message_ids(_key):
     async with async_session() as session:
         players = await session.scalars(select(Player)
@@ -198,7 +208,7 @@ async def create_game(_chat_id, _game_info):
             chat_id = _chat_id,
             admin = True,
             in_lobby = True,
-            score = 0.0
+            score = 0
         ))
         session.add(Match(
             chat_id = _chat_id,
@@ -256,6 +266,8 @@ async def delete_empty_games():
                             where(Game.key == game.key))
                     await session.execute(change)
                     await session.commit()
+
+#async def change_score(chat_id, key, change):
 
 
 
@@ -388,3 +400,18 @@ async def get_turn(_key):
                                     .where(Game.key == _key))
         
         return game.turn
+
+async def get_icons_scores(_key):
+    async with async_session() as session:
+        players = await session.scalars(select(Player)
+                                     .where(Player.key == _key))
+        
+        scores = []
+        icons = []
+
+        for player in players:
+            user = await session.scalar(select(User).where(User.chat_id == player.chat_id))
+            icons.append(user.icon_id)
+            scores.append(player.score)
+        
+        return scores, icons

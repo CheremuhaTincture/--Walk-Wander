@@ -188,7 +188,7 @@ async def start_game(callback: CallbackQuery, state: FSMContext):
                                               reply_markup = await kb.game_management_menu_keys(_key=key))
                 
             else:
-                await game_start(key, callback)
+                await game_start(key, callback, state.storage)
 
         if not everybody_are_ready:
             await callback.answer('Кто-то из игроков не зашел в лобби', show_alert=True)

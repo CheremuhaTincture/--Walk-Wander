@@ -1,97 +1,655 @@
 {
     "medieval" : {
         "small" : {
-            "0" : "1563, 1710",
-            "1" : "1469, 1888",
-            "2" : "1274, 1943",
-            "3" : "1391, 2107",
-            "4" : "1231, 2222",
-            "5" : "1029, 2246",
-            "6" : "829, 2380",
-            "7" : "1049, 2483",
-            "7.4" : "1103, 2678",
-            "7.8" : "1183, 2861",
-            "8.2" : "1344, 2740",
-            "8" : "1249, 2526",
-            "9" : "1447, 2561",
-            "10" : "1584, 2415",
-            "11" : "1694, 2249",
-            "12" : "1893, 2233",
-            "13" : "2075, 2318",
-            "14" : "2154, 2504",
-            "15" : "1996, 2624",
-            "16" : "2055, 2818",
-            "17" : "2198, 2959",
-            "18" : "2396, 2979",
-            "19" : "2539, 2846",
-            "19.2" : "2770, 2974",
-            "19.4" : "2956, 3049",
-            "19.6" : "3154, 3081",
-            "19.8" : "3331, 3174",
-            "20.1" : "3531, 3179",
-            "21.1" : "3499, 2980",
-            "22.1" : "3440, 2786",
-            "20" : "2733, 2777",
-            "21" : "2914, 2693",
-            "22" : "3107, 2660",
-            "23" : "3325, 2622",
-            "24" : "3191, 2475",
-            "25" : "2999, 2412",
-            "26" : "3042, 2217",
-            "27" : "2855, 2146",
-            "28" : "2668, 2067",
-            "29" : "2565, 1895",
-            "30" : "2454, 1727",
-            "31" : "2683, 1639",
-            "32" : "2695, 1449",
-            "33" : "2876, 1366",
-            "34" : "3070, 1309",
-            "35" : "3236, 1195",
-            "35.6" : "2724, 1237",
-            "37.6" : "2582, 1096",
-            "39.6" : "2520, 903",
-            "40.6" : "2379, 763",
-            "36" : "3160, 1010",
-            "37" : "3064, 831",
-            "37.2" : "3101, 616",
-            "37.5" : "3250, 481",
-            "37.7" : "3362, 315",
-            "37.9" : "3433, 128",
-            "38.2" : "3233, 127",
-            "38.5" : "3047, 203",
-            "38.7" : "2859, 272",
-            "39.1" : "2718, 413",
-            "38" : "2918, 696",
-            "39" : "2748, 589",
-            "40" : "2553, 527",
-            "41" : "2355, 568",
-            "42" : "2155, 560",
-            "43" : "1953, 553",
-            "44" : "1755, 520",
-            "45" : "1557, 481",
-            "46" : "1360, 447",
-            "47" : "1160, 444",
-            "48" : "982, 537",
-            "49" : "780, 537",
-            "50" : "585, 495",
-            "51" : "393, 439",
-            "52" : "206, 511",
-            "52.5" : "709, 728",
-            "53" : "333, 666",
-            "54" : "487, 793",
-            "55" : "523, 991",
-            "56" : "487, 1188",
-            "57" : "439, 1381",
-            "58" : "347, 1561",
-            "59" : "194, 1688",
-            "60" : "359, 1803",
-            "61" : "558, 1838",
-            "62" : "757, 1839",
-            "63" : "843, 1657",
-            "64" : "944, 1485",
-            "65" : "1071, 1329",
-            "66" : "1268, 1285",
-            "67" : "1393, 1448"
+            // "номер позиции" : "координата1, координата2, 
+            // меняет шаг мягко, меняет шаг принудительно, 
+            // мгновенно меняет координату, значение,
+            // волшебная монета - случай, когда оба sc - True"
+            // sc - step change
+            /* "0" : {
+                "coordinates" : "1563, 1710",
+                "sc_soft" : "False",
+                "sc_hard" : "False",
+                "teleport" : "False",
+                "value" : ""
+            }, */
+            "0": {
+                "coordinates": "1563, 1710",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "1": {
+                "coordinates": "1469, 1888",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "2": {
+                "coordinates": "1274, 1943",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "3": {
+                "coordinates": "1391, 2107",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "4": {
+                "coordinates": "1231, 2222",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "5": {
+                "coordinates": "1029, 2246",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "6": {
+                "coordinates": "829, 2380",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "7": {
+                "coordinates": "1049, 2483",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "8": {
+                "coordinates": "1249, 2526",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "9": {
+                "coordinates": "1447, 2561",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "10": {
+                "coordinates": "1584, 2415",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "11": {
+                "coordinates": "1694, 2249",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "12": {
+                "coordinates": "1893, 2233",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "13": {
+                "coordinates": "2075, 2318",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "14": {
+                "coordinates": "2154, 2504",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "15": {
+                "coordinates": "1996, 2624",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "16": {
+                "coordinates": "2055, 2818",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "17": {
+                "coordinates": "2198, 2959",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "18": {
+                "coordinates": "2396, 2979",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "19": {
+                "coordinates": "2539, 2846",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "20": {
+                "coordinates": "2733, 2777",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "21": {
+                "coordinates": "2914, 2693",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "22": {
+                "coordinates": "3107, 2660",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "23": {
+                "coordinates": "3325, 2622",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "24": {
+                "coordinates": "3191, 2475",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "25": {
+                "coordinates": "2999, 2412",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "26": {
+                "coordinates": "3042, 2217",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "27": {
+                "coordinates": "2855, 2146",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "28": {
+                "coordinates": "2668, 2067",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "29": {
+                "coordinates": "2565, 1895",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "30": {
+                "coordinates": "2454, 1727",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "31": {
+                "coordinates": "2683, 1639",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "32": {
+                "coordinates": "2695, 1449",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "33": {
+                "coordinates": "2876, 1366",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "34": {
+                "coordinates": "3070, 1309",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "35": {
+                "coordinates": "3236, 1195",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "36": {
+                "coordinates": "3160, 1010",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "37": {
+                "coordinates": "3064, 831",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "38": {
+                "coordinates": "2918, 696",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "39": {
+                "coordinates": "2748, 589",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "40": {
+                "coordinates": "2553, 527",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "41": {
+                "coordinates": "2355, 568",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "42": {
+                "coordinates": "2155, 560",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "43": {
+                "coordinates": "1953, 553",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "44": {
+                "coordinates": "1755, 520",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "45": {
+                "coordinates": "1557, 481",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "46": {
+                "coordinates": "1360, 447",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "47": {
+                "coordinates": "1160, 444",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "48": {
+                "coordinates": "982, 537",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "49": {
+                "coordinates": "780, 537",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "50": {
+                "coordinates": "585, 495",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "51": {
+                "coordinates": "393, 439",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "52": {
+                "coordinates": "206, 511",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "53": {
+                "coordinates": "333, 666",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "54": {
+                "coordinates": "487, 793",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "55": {
+                "coordinates": "523, 991",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "56": {
+                "coordinates": "487, 1188",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "57": {
+                "coordinates": "439, 1381",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "58": {
+                "coordinates": "347, 1561",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "59": {
+                "coordinates": "194, 1688",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "60": {
+                "coordinates": "359, 1803",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "61": {
+                "coordinates": "558, 1838",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "62": {
+                "coordinates": "757, 1839",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "63": {
+                "coordinates": "843, 1657",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "64": {
+                "coordinates": "944, 1485",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "65": {
+                "coordinates": "1071, 1329",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "66": {
+                "coordinates": "1268, 1285",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "67": {
+                "coordinates": "1393, 1448",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "68": {
+                "coordinates": "1103, 2678",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "69": {
+                "coordinates": "1183, 2861",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "70": {
+                "coordinates": "1344, 2740",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "72": {
+                "coordinates": "2770, 2974",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "73": {
+                "coordinates": "2956, 3049",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "74": {
+                "coordinates": "3154, 3081",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "75": {
+                "coordinates": "3331, 3174",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "76": {
+                "coordinates": "3531, 3179",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "77": {
+                "coordinates": "3499, 2980",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "78": {
+                "coordinates": "3440, 2786",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "79": {
+                "coordinates": "2724, 1237",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "80": {
+                "coordinates": "2582, 1096",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "81": {
+                "coordinates": "2520, 903",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "82": {
+                "coordinates": "2379, 763",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "83": {
+                "coordinates": "3101, 616",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "84": {
+                "coordinates": "3250, 481",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "85": {
+                "coordinates": "3362, 315",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "86": {
+                "coordinates": "3433, 128",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "87": {
+                "coordinates": "3233, 127",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "88": {
+                "coordinates": "3047, 203",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "89": {
+                "coordinates": "2859, 272",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "90": {
+                "coordinates": "2718, 413",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            },
+            "91": {
+                "coordinates": "709, 728",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": ""
+            }
         },
         "medium" : {
 

@@ -32,6 +32,8 @@ async def open_profile(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await callback.message.answer(text=static_text["profile"], reply_markup=kb.profile)
     await state.set_state(st.Mono.profile)
+    #await st.give_state(callback.from_user.id, callback.bot.id, st.MonoGameplay.turn, state.storage)
+    #await st.get_state(callback.from_user.id, callback.bot.id, state.storage)
 
 @prof_router.callback_query(F.data == 'change_nickname')
 async def change_nick_begin(callback: CallbackQuery, state: FSMContext):
