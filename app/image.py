@@ -27,13 +27,12 @@ async def generate_game_field(map_id, _key):
             map.load()
             
         for i in range(0, len(scores)):
+            position = positions["medieval"]["small"][f"{scores[i]}"]["coordinates"].split(', ')
             if icons[i] == 0:
-                position = positions["medieval"]["small"][f"{scores[i]}"].split(', ')
                 map.paste(
                     icon1.resize((95, 95)), (int(position[0]), int(position[1])), mask=icon1.resize((95, 95))
                 )
             if icons[i] == 1:
-                position = positions["medieval"]["small"][f"{scores[i]}"].split(', ')
                 map.paste(
                     icon2.resize((95, 95)), (int(position[0]), int(position[1])), mask=icon1.resize((95, 95))
                 )

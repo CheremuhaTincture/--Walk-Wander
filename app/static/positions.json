@@ -6,649 +6,675 @@
             // мгновенно меняет координату, значение,
             // волшебная монета - случай, когда оба sc - True"
             // sc - step change
-            /* "0" : {
-                "coordinates" : "1563, 1710",
-                "sc_soft" : "False",
-                "sc_hard" : "False",
-                "teleport" : "False",
-                "value" : ""
-            }, */
             "0": {
                 "coordinates": "1563, 1710",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "1": {
                 "coordinates": "1469, 1888",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "2": {
                 "coordinates": "1274, 1943",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "3": {
                 "coordinates": "1391, 2107",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "4": {
                 "coordinates": "1231, 2222",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "5": {
                 "coordinates": "1029, 2246",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "6": {
                 "coordinates": "829, 2380",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "7": {
                 "coordinates": "1049, 2483",
+                "sc_soft": true,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 0.49
+            },
+
+            // <ALTERNATIVE>
+
+            "7.49": {
+                "coordinates": "1103, 2678",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
+            "7.98": {
+                "coordinates": "1183, 2861",
+                "sc_soft": true,
+                "sc_hard": true,
+                "teleport": false,
+                "value": 1.0
+            },
+            "8.47": {
+                "coordinates": "1344, 2740",
+                "sc_soft": false,
+                "sc_hard": true,
+                "teleport": false,
+                "value": 0.53
+            },
+
+            // </ALTERNATIVE>
+
             "8": {
                 "coordinates": "1249, 2526",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "9": {
                 "coordinates": "1447, 2561",
                 "sc_soft": false,
-                "sc_hard": false,
+                "sc_hard": true,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "10": {
                 "coordinates": "1584, 2415",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "11": {
                 "coordinates": "1694, 2249",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "12": {
                 "coordinates": "1893, 2233",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "13": {
                 "coordinates": "2075, 2318",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "14": {
                 "coordinates": "2154, 2504",
                 "sc_soft": false,
                 "sc_hard": false,
-                "teleport": false,
-                "value": ""
+                "teleport": true,
+                "value": -2.0
             },
             "15": {
                 "coordinates": "1996, 2624",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "16": {
                 "coordinates": "2055, 2818",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "17": {
                 "coordinates": "2198, 2959",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "18": {
                 "coordinates": "2396, 2979",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "19": {
                 "coordinates": "2539, 2846",
+                "sc_soft": true,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 0.49
+            },
+
+            // <ALTERNATIVE>
+
+            "19.49": {
+                "coordinates": "2770, 2974",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
+            "19.98": {
+                "coordinates": "2956, 3049",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 1.0
+            },
+            "20.47": {
+                "coordinates": "3154, 3081",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 1.0
+            },
+            "20.96": {
+                "coordinates": "3331, 3174",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 1.0
+            },
+            "21.45": {
+                "coordinates": "3531, 3179",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": true,
+                "value": 1.55
+            },
+            "21.94": {
+                "coordinates": "3499, 2980",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 1.0
+            },
+            "22.43": {
+                "coordinates": "3440, 2786",
+                "sc_soft": false,
+                "sc_hard": true,
+                "teleport": false,
+                "value": 0.57
+            },
+
+            // </ALTERNATIVE>
+
             "20": {
                 "coordinates": "2733, 2777",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "21": {
                 "coordinates": "2914, 2693",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "22": {
                 "coordinates": "3107, 2660",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "23": {
                 "coordinates": "3325, 2622",
                 "sc_soft": false,
-                "sc_hard": false,
+                "sc_hard": true,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "24": {
                 "coordinates": "3191, 2475",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "25": {
                 "coordinates": "2999, 2412",
-                "sc_soft": false,
+                "sc_soft": true,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": -4.0
             },
             "26": {
                 "coordinates": "3042, 2217",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "27": {
                 "coordinates": "2855, 2146",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "28": {
                 "coordinates": "2668, 2067",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "29": {
                 "coordinates": "2565, 1895",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "30": {
                 "coordinates": "2454, 1727",
-                "sc_soft": false,
+                "sc_soft": true,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": -2.0
             },
             "31": {
                 "coordinates": "2683, 1639",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "32": {
                 "coordinates": "2695, 1449",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "33": {
                 "coordinates": "2876, 1366",
+                "sc_soft": true,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 1.59
+            },
+
+            // <ALTERNATIVE>
+
+            "34.59": {
+                "coordinates": "2724, 1237",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
+            "36.18": {
+                "coordinates": "2582, 1096",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 1.0
+            },
+            "37.77": {
+                "coordinates": "2520, 903",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 1.0
+            },
+            "39.36": {
+                "coordinates": "2379, 763",
+                "sc_soft": false,
+                "sc_hard": true,
+                "teleport": false,
+                "value": 1.64
+            },
+
+            // </ALTERNATIVE>
+
             "34": {
                 "coordinates": "3070, 1309",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "35": {
                 "coordinates": "3236, 1195",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "36": {
                 "coordinates": "3160, 1010",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "37": {
                 "coordinates": "3064, 831",
+                "sc_soft": true,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 0.33
+            },
+
+            // <ALTERNATIVE>
+
+            "37.33": {
+                "coordinates": "3101, 616",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
+            "37.66": {
+                "coordinates": "3250, 481",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 1.0
+            },
+            "37.99": {
+                "coordinates": "3362, 315",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 1.0
+            },
+            "38.32": {
+                "coordinates": "3433, 128",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": true,
+                "value": 4.0
+            },
+            "38.65": {
+                "coordinates": "3233, 127",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 1.0
+            },
+            "38.98": {
+                "coordinates": "3047, 203",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 1.0
+            },
+            "39.31": {
+                "coordinates": "2859, 272",
+                "sc_soft": false,
+                "sc_hard": false,
+                "teleport": false,
+                "value": 1.0
+            },
+            "39.64": {
+                "coordinates": "2718, 413",
+                "sc_soft": false,
+                "sc_hard": true,
+                "teleport": false,
+                "value": 0.36
+            },
+
+            // </ALTERNATIVE>
+
             "38": {
                 "coordinates": "2918, 696",
                 "sc_soft": false,
-                "sc_hard": false,
+                "sc_hard": true,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "39": {
                 "coordinates": "2748, 589",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "40": {
                 "coordinates": "2553, 527",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
+
+            // В СЛУЧАЕ ЕСЛИ SC_HARD И TELEPORT ИМЕЮТ ЗНАЧЕНИЕ TRUE, СТАВИМ STEP 1.0 И ТЕЛЕПОРТУЕМ НА VALUE
             "41": {
                 "coordinates": "2355, 568",
                 "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
+                "sc_hard": true,
+                "teleport": true,
+                "value": 3.0
             },
+
             "42": {
                 "coordinates": "2155, 560",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "43": {
                 "coordinates": "1953, 553",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "44": {
                 "coordinates": "1755, 520",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "45": {
                 "coordinates": "1557, 481",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "46": {
                 "coordinates": "1360, 447",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "47": {
                 "coordinates": "1160, 444",
                 "sc_soft": false,
                 "sc_hard": false,
-                "teleport": false,
-                "value": ""
+                "teleport": true,
+                "value": 4.0
             },
             "48": {
                 "coordinates": "982, 537",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "49": {
                 "coordinates": "780, 537",
-                "sc_soft": false,
+                "sc_soft": true,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 2.49
             },
+
+            // <ALTERNATIVE>
+
+            "51.49": {
+                "coordinates": "709, 728",
+                "sc_soft": false,
+                "sc_hard": true,
+                "teleport": false,
+                "value": 2.51
+            },
+
+            // </ALTERNATIVE>
+
             "50": {
                 "coordinates": "585, 495",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "51": {
                 "coordinates": "393, 439",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "52": {
                 "coordinates": "206, 511",
                 "sc_soft": false,
                 "sc_hard": false,
-                "teleport": false,
-                "value": ""
+                "teleport": true,
+                "value": -4.0
             },
             "53": {
                 "coordinates": "333, 666",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "54": {
                 "coordinates": "487, 793",
                 "sc_soft": false,
-                "sc_hard": false,
+                "sc_hard": true,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "55": {
                 "coordinates": "523, 991",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "56": {
                 "coordinates": "487, 1188",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "57": {
                 "coordinates": "439, 1381",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "58": {
                 "coordinates": "347, 1561",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "59": {
                 "coordinates": "194, 1688",
                 "sc_soft": false,
                 "sc_hard": false,
-                "teleport": false,
-                "value": ""
+                "teleport": true,
+                "value": 4.0
             },
             "60": {
                 "coordinates": "359, 1803",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "61": {
                 "coordinates": "558, 1838",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "62": {
                 "coordinates": "757, 1839",
                 "sc_soft": false,
                 "sc_hard": false,
-                "teleport": false,
-                "value": ""
+                "teleport": true,
+                "value": -4.0
             },
             "63": {
                 "coordinates": "843, 1657",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "64": {
                 "coordinates": "944, 1485",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "65": {
                 "coordinates": "1071, 1329",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
+                "value": 1.0
             },
             "66": {
                 "coordinates": "1268, 1285",
                 "sc_soft": false,
                 "sc_hard": false,
-                "teleport": false,
-                "value": ""
+                "teleport": true,
+                "value": -2.0
             },
             "67": {
                 "coordinates": "1393, 1448",
                 "sc_soft": false,
                 "sc_hard": false,
                 "teleport": false,
-                "value": ""
-            },
-            "68": {
-                "coordinates": "1103, 2678",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "69": {
-                "coordinates": "1183, 2861",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "70": {
-                "coordinates": "1344, 2740",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "72": {
-                "coordinates": "2770, 2974",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "73": {
-                "coordinates": "2956, 3049",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "74": {
-                "coordinates": "3154, 3081",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "75": {
-                "coordinates": "3331, 3174",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "76": {
-                "coordinates": "3531, 3179",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "77": {
-                "coordinates": "3499, 2980",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "78": {
-                "coordinates": "3440, 2786",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "79": {
-                "coordinates": "2724, 1237",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "80": {
-                "coordinates": "2582, 1096",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "81": {
-                "coordinates": "2520, 903",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "82": {
-                "coordinates": "2379, 763",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "83": {
-                "coordinates": "3101, 616",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "84": {
-                "coordinates": "3250, 481",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "85": {
-                "coordinates": "3362, 315",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "86": {
-                "coordinates": "3433, 128",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "87": {
-                "coordinates": "3233, 127",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "88": {
-                "coordinates": "3047, 203",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "89": {
-                "coordinates": "2859, 272",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "90": {
-                "coordinates": "2718, 413",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
-            },
-            "91": {
-                "coordinates": "709, 728",
-                "sc_soft": false,
-                "sc_hard": false,
-                "teleport": false,
-                "value": ""
+                "value": 1.0
             }
         },
         "medium" : {

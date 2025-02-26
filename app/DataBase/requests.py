@@ -208,7 +208,8 @@ async def create_game(_chat_id, _game_info):
             chat_id = _chat_id,
             admin = True,
             in_lobby = True,
-            score = 0
+            score = 0.0,
+            step = 1.0
         ))
         session.add(Match(
             chat_id = _chat_id,
