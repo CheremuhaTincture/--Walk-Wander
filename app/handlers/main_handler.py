@@ -120,8 +120,8 @@ async def enter_by_code(callback: CallbackQuery, state: FSMContext):
 @main_router.message(st.Mono.game_key)
 async def check_key(message: Message, state: FSMContext):
     if (len(message.text) == 3) and (message.text.isdigit()):
-        key = message.text
-        try:
+            key = message.text
+        #try:
             if await rq.game_is_created(key):
                 await rq.join_game(message.from_user.id, key)
                 game_info = await rq.get_game_info(key)
@@ -171,11 +171,11 @@ async def check_key(message: Message, state: FSMContext):
                 await message.answer(text=static_text["game_unaccessible"],
                                      reply_markup=kb.main_menu(False))
 
-        except Exception:
-            await message.answer(text=static_text["game_connection_err"],
-                                 reply_markup=kb.main_menu(False))
+        #except Exception:
+            #await message.answer(text=static_text["game_connection_err"],
+            #                     reply_markup=kb.main_menu(False))
             
-        await state.clear()
+            await state.clear()
     else:
         await message.answer(text=static_text["incorrect_code"])
 

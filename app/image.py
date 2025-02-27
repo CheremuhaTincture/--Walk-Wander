@@ -21,23 +21,21 @@ async def generate_game_field(map_id, _key):
     with Image.open(filename_icon2) as icon2:
         icon2.load()
 
-    if map_id == 1:
-
-        with Image.open(filename_map) as map:
-            map.load()
-            
-        for i in range(0, len(scores)):
-            position = positions["medieval"]["small"][f"{scores[i]}"]["coordinates"].split(', ')
-            if icons[i] == 0:
-                map.paste(
-                    icon1.resize((95, 95)), (int(position[0]), int(position[1])), mask=icon1.resize((95, 95))
-                )
-            if icons[i] == 1:
-                map.paste(
-                    icon2.resize((95, 95)), (int(position[0]), int(position[1])), mask=icon1.resize((95, 95))
-                )
+    with Image.open(filename_map) as map:
+        map.load()
         
-        map = map.resize((int(map.width / 1.7), int(map.height / 1.7)))
+    for i in range(0, len(scores)):
+        position = positions[f"{map_id}"]["0"][f"{scores[i]}"]["coordinates"].split(', ')
+        if icons[i] == 0:
+            map.paste(
+                icon1.resize((95, 95)), (int(position[0]), int(position[1])), mask=icon1.resize((95, 95))
+            )
+        if icons[i] == 1:
+            map.paste(
+                icon2.resize((95, 95)), (int(position[0]), int(position[1])), mask=icon1.resize((95, 95))
+            )
+    
+    map = map.resize((int(map.width / 1.7), int(map.height / 1.7)))
 
-        map.save(f"app/temp/gf_{_key}.png")
-        return f"app/temp/gf_{_key}.png"
+    map.save(f"app/temp/gf_{_key}.png")
+    return f"app/temp/gf_{_key}.png"

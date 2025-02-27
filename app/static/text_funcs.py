@@ -1,4 +1,4 @@
-from aiogram.types import Message, FSInputFile
+from aiogram.types import Message, FSInputFile, InputMediaPhoto
 from aiogram.types.reply_keyboard_remove import ReplyKeyboardRemove
 from dotenv import load_dotenv
 from random import randint
@@ -51,7 +51,14 @@ async def change_text_lobby(__key, _text, message: Message):
         except ae.TelegramBadRequest:
             continue
 
-async def change_lobby_text_to_gameplay(_key, _text, map_id, message: Message, state_storage):
+async def send_new_message_with_photo(chat_id, key, text, photo, reply_markup, message: Message):
+        main_msg = await message.bot.send_photo(chat_id=chat_id,
+                                                caption=text,
+                                                photo=photo,
+                                                reply_markup=reply_markup)
+        await rq.set_main_message(chat_id, key, main_msg.message_id)
+
+async def change_lobby_text_to_gameplay(_key, _text, map_id, message: Message):
     message_n_chat_ids = await rq.get_main_message_ids_n_index(_key)
 
     turn = await rq.get_turn(_key)
@@ -62,27 +69,73 @@ async def change_lobby_text_to_gameplay(_key, _text, map_id, message: Message, s
 
     for id in message_n_chat_ids:
         ids=id.split('_')
+        if int(ids[2]) == turn:
+            task1 = asyncio.create_task(
+                send_new_message_with_photo(
+                    chat_id=ids[1],
+                    key=_key,
+                    text=_text,
+                    photo=gf,
+                    reply_markup=kb.gameplay_menu(_key),
+                    message=message
+                )
+            )
+            asyncio.gather(task1)
+        else:
+            task1 = asyncio.create_task(
+                send_new_message_with_photo(
+                    chat_id=ids[1],
+                    key=_key,
+                    text=_text,
+                    photo=gf,
+                    reply_markup=None,
+                    message=message
+                )
+            )
+            asyncio.gather(task1)
+
+        await asyncio.sleep(2)
         await message.bot.delete_message(message_id=ids[0],
                                          chat_id=ids[1])
-        main_msg = await message.bot.send_photo(chat_id=ids[1],
-                                                caption=_text,
-                                                photo = gf)
+            
+
+    sample_message = await message.bot.send_message(text=_text,
+                                                    chat_id=os.getenv('SPAM_GROUP'))
+    sample_message_id = sample_message.message_id
+    await rq.set_sample_message_id(_key, sample_message_id)
+
+async def change_text_gameplay(_key, _text, map_id, message: Message):
+    message_n_chat_ids = await rq.get_main_message_ids_n_index(_key)
+
+    turn = await rq.get_turn(_key)
+
+    path = await img.generate_game_field(map_id, _key)
+
+    gf = FSInputFile(path)
+
+    for id in message_n_chat_ids:
+        ids=id.split('_')
         if int(ids[2]) == turn:
-            event_msg = await message.bot.send_message(chat_id=ids[1],
-                                                       text='Ваша очередь ходить',
-                                                       reply_markup=kb.gameplay_menu)
+            task1 = asyncio.create_task(
+                message.bot.edit_message_media(chat_id=ids[1],
+                                               message_id=int(ids[0]),
+                                               media = InputMediaPhoto(media=gf, caption=_text),
+                                               reply_markup=kb.gameplay_menu(_key))
+            )
+            asyncio.gather(task1)
         else:
-            vent_msg = await message.bot.send_message(chat_id=ids[1],
-                                                       text='Ожидание хода оппонента...')
-                                                        #reply_markup=ReplyKeyboardRemove())
+            task1 = asyncio.create_task(
+                message.bot.edit_message_media(chat_id=ids[1],
+                                               message_id=ids[0],
+                                               media = InputMediaPhoto(media=gf, caption=_text),
+                                               reply_markup=None)
+            )
+            asyncio.gather(task1)
 
-        sample_message = await message.bot.send_message(text=_text,
-                                                        chat_id=os.getenv('SPAM_GROUP'))
-        sample_message_id = sample_message.message_id
-        await rq.set_sample_message_id(_key, sample_message_id)
-        await rq.set_event_n_main_msg(ids[1], _key, event_msg.message_id, main_msg.message_id)
-
-    os.remove(path)
+    sample_message = await message.bot.send_message(text=_text,
+                                                    chat_id=os.getenv('SPAM_GROUP'))
+    sample_message_id = sample_message.message_id
+    await rq.set_sample_message_id(_key, sample_message_id)
 
 
 
@@ -134,7 +187,11 @@ def game_lobby(_key, _game_info, new_player_name, player_exit_name, player_erase
 
 
 #ТЕКСТ ГЕЙМПЛЕЯ
-def gameplay(_key, _game_info, player_exit_name, prev_text: str, current_turn, _players, current_leader):
+async def gameplay(_key, player_exit_name, prev_text: str, current_turn, got_coin_text):
+    _game_info = await rq.get_game_info(_key)
+
+    _players = await rq.get_queue(_key)
+    current_leader = await rq.get_leader(_key)
 
     map_name = fs.map_name(_game_info['map_id'])
     map_size = fs.map_size(_game_info['map_size'])
@@ -168,5 +225,8 @@ def gameplay(_key, _game_info, player_exit_name, prev_text: str, current_turn, _
 
     if player_exit_name != None:
         final_text += f'\nИгрок {player_exit_name} покинул(ла) игру!'
+    
+    if got_coin_text != None:
+        final_text += got_coin_text
     
     return final_text

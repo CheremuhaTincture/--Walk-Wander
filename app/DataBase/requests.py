@@ -7,6 +7,10 @@ import app.static.text_funcs as tf
 
 import asyncio
 import random
+import json
+
+with open("app/static/positions.json", "r", encoding="utf8") as pos:
+    positions = json.load(pos)
 
 #Управление пользователем
 async def is_registered(_chat_id):
@@ -64,7 +68,8 @@ async def join_game(_chat_id, _key):
                 key = _key,
                 admin = False,
                 in_lobby = True,
-                score = 0.0
+                score = 0.0,
+                step = 1.0
             ))
             await session.commit()
         else:
@@ -102,16 +107,6 @@ async def set_main_message(_chat_id, _key, message_id):
         await session.execute(change)
         await session.commit()
 
-async def set_event_n_main_msg(_chat_id, _key, event_msg_id, main_msg_id):
-    async with async_session() as session:
-        change = (update(Player)
-                  .where(Player.chat_id == _chat_id,
-                         Player.key == _key)
-                  .values(event_message_id = str(event_msg_id),
-                          main_message_id = str(main_msg_id)))
-        await session.execute(change)
-        await session.commit()
-
 async def get_main_message_ids(_key):
     async with async_session() as session:
         players = await session.scalars(select(Player)
@@ -124,6 +119,14 @@ async def get_main_message_ids(_key):
                 message_ids.append(player.main_message_id+'_'+str(player.chat_id))
         
         return message_ids
+
+async def get_main_message_id(_key, _chat_id):
+    async with async_session() as session:
+        player = await session.scalar(select(Player)
+                                      .where(Player.key == _key,
+                                             Player.chat_id == _chat_id))
+        
+        return player.main_message_id
     
 async def get_main_message_ids_n_index(_key):
     async with async_session() as session:
@@ -188,6 +191,100 @@ async def get_leader(_key):
                 max_score = player.score
         
         return leader
+
+async def change_score(chat_id, key, change, map_id, map_size):
+    async with async_session() as session:
+        player = await session.scalar(select(Player)
+                                      .where(Player.key == key,
+                                             Player.chat_id == chat_id))
+        
+        step = player.step
+        current_score = player.score
+
+        for i in range(1, change+1):
+            current_score += step
+            current_position = positions[f"{map_id}"][f"{map_size}"][f"{current_score}"]
+
+            if current_position["sc_hard"] and not(current_position["sc_soft"]):
+                step = current_position["value"]
+        
+        if current_position["sc_soft"]:
+
+            if current_position["sc_hard"]:
+                redact = (update(Player)
+                          .where(Player.chat_id == chat_id,
+                                 Player.key == key)
+                          .values(step = step,
+                                  score = current_score))
+                await session.execute(redact)
+                await session.commit()
+                return 'magic_coin'
+            
+            elif current_position["value"] < 1:
+                step = current_position["value"]
+                redact = (update(Player)
+                          .where(Player.chat_id == chat_id,
+                                 Player.key == key)
+                          .values(step = step,
+                                  score = current_score))
+                await session.execute(redact)
+                await session.commit()
+                return 'fake_coin'
+            
+            elif current_position["value"] > 1:
+                step = current_position["value"]
+                redact = (update(Player)
+                          .where(Player.chat_id == chat_id,
+                                 Player.key == key)
+                          .values(step = step,
+                                  score = current_score))
+                await session.execute(redact)
+                await session.commit()
+                return 'invite_coin'
+        
+        elif not(current_position["sc_hard"]) and current_position["teleport"] and (current_position["value"] > 0):
+            current_score += current_position["value"]
+            redact = (update(Player)
+                        .where(Player.chat_id == chat_id,
+                                Player.key == key)
+                        .values(step = step,
+                                score = current_score))
+            await session.execute(redact)
+            await session.commit()
+            return 'good_coin'
+        
+        elif not(current_position["sc_hard"]) and current_position["teleport"] and (current_position["value"] < 0):
+            current_score += current_position["value"]
+            redact = (update(Player)
+                        .where(Player.chat_id == chat_id,
+                                Player.key == key)
+                        .values(step = step,
+                                score = current_score))
+            await session.execute(redact)
+            await session.commit()
+            return 'bad_coin'
+        
+        elif current_position["sc_hard"] and current_position["teleport"]:
+            current_score += current_position["value"]
+            step = 1.0
+            redact = (update(Player)
+                        .where(Player.chat_id == chat_id,
+                                Player.key == key)
+                        .values(step = step,
+                                score = current_score))
+            await session.execute(redact)
+            await session.commit()
+            return 'good_coin'
+        
+        else:
+            redact = (update(Player)
+                        .where(Player.chat_id == chat_id,
+                                Player.key == key)
+                        .values(step = step,
+                                score = current_score))
+            await session.execute(redact)
+            await session.commit()
+            return 'common'
 
 
 
@@ -267,8 +364,6 @@ async def delete_empty_games():
                             where(Game.key == game.key))
                     await session.execute(change)
                     await session.commit()
-
-#async def change_score(chat_id, key, change):
 
 
 
